@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Frontend</title>
+<title>Twitter App</title>
 <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
 <link type="text/css" rel="stylesheet" href="jscss/style.css" />
 </head>
@@ -28,15 +28,25 @@
     <div id="content-main">
         <div class="brick">
             <div class="tweetBoxContainer">
-                <h4 style="display:none">Write a tweet:</h4>
+                <h3 style="display:none">Write a tweet:</h3>
                 <textarea id="tweetBox" rows=1 placeholder="Wassup?"></textarea>
                 <div style="display:none">
                     <button class="btn btn-primary">Post</button>
                     <button class="btn">Clear</button>
                 </div>
             </div>
-            Here goes the content<br/>
-            Something<br/>
+            <hr/>
+            <h2>Tweets feed:</h2>
+            <div id="tweetsContainer">
+                <div class="tweet">
+                <span class="user">Exuser1:</span><br/>
+                Example Tweet1
+                </div>
+                <div class="tweet">
+                <span class="user">Exuser2:</span><br/>
+                Example Tweet2
+                </div>
+            </div>
             <div class="clearer"></div>
         </div>
     </div>

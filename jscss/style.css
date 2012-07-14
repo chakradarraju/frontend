@@ -39,3 +39,13 @@ body {
 .clearer {
     clear: both;
 }
+#tweetsContainer {
+    padding: 5px;
+}
+.tweet {
+    margin: 5px 10px 23px 10px;
+    border-bottom: 1px dashed black;
+}
+.user {
+    font-weight: bold;
+}
