@@ -4,3 +4,11 @@ $("li a").click(function() {
     $(lielement).siblings().removeClass("active");
     $(lielement).addClass("active");
 });
+$("#tweetBox").focus(function() {
+    $(this).prev().slideDown();
+    $(this).next().slideDown();
+});
+$("#tweetBox").blur(function() {
+    $(this).prev().slideUp();
+    $(this).next().slideUp();
+});
