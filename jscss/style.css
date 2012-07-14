@@ -29,3 +29,10 @@ body {
 #content-main .brick {
     padding: 20px;
 }
+#searchBox {
+    margin: 8px;
+    padding: 10px;
+    border-radius: 10px;
+    position: absolute;
+    right: 0px;
+}
