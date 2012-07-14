@@ -1,16 +1,31 @@
 body {
     background: url('../img/pattern1.gif');
-    margin: 55px 0px;
+    margin: 0px;
     padding: 0px;
     text-align: center;
 }
-#content {
+#content-wrapper {
     background: rgba(10,10,10,0.8);
-    border-radius: 0px 30px;
-    color: white;
+    padding: 60px 25px;
     width: 900px;
+    height: 100%;
     margin: 0px auto;
     text-align: left;
-    padding: 15px;
-    border: 1px dashed #333;
+}
+#dashboard {
+    float: left;
+    width: 300px;
+}
+#content-main {
+    float: right;
+    width: 600px;
+}
+.brick {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 20px 7px;
+    background: white;
+}
+#content-main .brick {
+    padding: 20px;
 }
