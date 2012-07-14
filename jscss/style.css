@@ -6,7 +6,7 @@ body {
 }
 #content {
     background: rgba(10,10,10,0.8);
-    border-radius: 20px;
+    border-radius: 0px 30px;
     color: white;
     width: 900px;
     margin: 0px auto;
