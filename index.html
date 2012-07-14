@@ -1,0 +1,36 @@
+<html>
+<head>
+<title>Frontend</title>
+<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+<link type="text/css" rel="stylesheet" href="jscss/style.css" />
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<ul class="nav">
+<li class="active"><a href="#pattern1.gif">Pattern 1</a></li>
+<li><a href="#pattern2.png">Pattern 2</a></li>
+<li><a href="#pattern3.jpg">Pattern 3</a></li>
+<li><a href="#pattern4.jpg">Pattern 4</a></li>
+<li><a href="#pattern5.jpg">Pattern 5</a></li>
+<li><a href="#pattern6.gif">Pattern 6</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="content" class="row">
+Here goes the content
+</div>
+<script src="jscss/jquery.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript">
+$("li a").click(function() {
+    $("body").css("background","url('img/"+$(this).attr("href").substr(1)+"')");
+    var lielement = $(this).parent();
+    $(lielement).siblings().removeClass("active");
+    $(lielement).addClass("active");
+});
+</script>
+</body>
+</html>

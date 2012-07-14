@@ -1,0 +1,16 @@
+body {
+    background: url('../img/pattern1.gif');
+    margin: 55px 0px;
+    padding: 0px;
+    text-align: center;
+}
+#content {
+    background: rgba(10,10,10,0.8);
+    border-radius: 20px;
+    color: white;
+    width: 900px;
+    margin: 0px auto;
+    text-align: left;
+    padding: 15px;
+    border: 1px dashed #333;
+}
