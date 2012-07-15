@@ -49,3 +49,6 @@ body {
 .user {
     font-weight: bold;
 }
+#tweetBox {
+    width: 100%;
+}

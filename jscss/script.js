@@ -14,7 +14,14 @@ $("#tweetBox").blur(function() {
         $(this).next().slideUp();
     }
 });
+resizeIt = function() {
+    var str = $('#tweetBox').val();
+    $('#tweetBox').attr('rows',str.split("\n").length+1);
+};
 $("#clearBtn").click(function() {
     $("#tweetBox").val("");
     $("#tweetBox").focus();
+    resizeIt();
 });
+$("#tweetBox").keydown(resizeIt);
+resizeIt();
