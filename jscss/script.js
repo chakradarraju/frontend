@@ -19,9 +19,12 @@ resizeIt = function() {
     $('#tweetBox').attr('rows',str.split("\n").length+1);
 };
 $("#clearBtn").click(function() {
-    $("#tweetBox").val("");
-    $("#tweetBox").focus();
-    resizeIt();
+    $("#tweetBox").fadeOut(function() {
+        $("#tweetBox").val("");
+        $("#tweetBox").focus();
+        resizeIt();
+        $("#tweetBox").fadeIn();
+    });
 });
 $("#tweetBox").keydown(resizeIt);
 resizeIt();
@@ -32,8 +35,11 @@ $("#postBtn").click(function() {
             'tweet':$("#tweetBox").val()
         }, function() {
             $("#ticker").fadeOut(); 
-            $("#tweetBox").val("");
-            resizeIt();
-            $("#tweetBox").blur();
+            $("#tweetBox").fadeOut(function() {
+                $("#tweetBox").val("");
+                resizeIt();
+                $("#tweetBox").blur();
+                $("#tweetBox").fadeIn();
+            });
         });
 });
