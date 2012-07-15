@@ -9,6 +9,12 @@ $("#tweetBox").focus(function() {
     $(this).next().slideDown();
 });
 $("#tweetBox").blur(function() {
-    $(this).prev().slideUp();
-    $(this).next().slideUp();
+    if($(this).val()=="") {
+        $(this).prev().slideUp();
+        $(this).next().slideUp();
+    }
+});
+$("#clearBtn").click(function() {
+    $("#tweetBox").val("");
+    $("#tweetBox").focus();
 });
