@@ -25,3 +25,15 @@ $("#clearBtn").click(function() {
 });
 $("#tweetBox").keydown(resizeIt);
 resizeIt();
+$("#postBtn").click(function() {
+    $("#ticker").html("Posting tweet...");
+    $("#ticker").fadeIn();
+    $.post("post/",{
+            'tweet':$("#tweetBox").val()
+        }, function() {
+            $("#ticker").fadeOut(); 
+            $("#tweetBox").val("");
+            resizeIt();
+            $("#tweetBox").blur();
+        });
+});
