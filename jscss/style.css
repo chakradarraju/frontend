@@ -33,8 +33,7 @@ body {
     margin: 8px;
     padding: 10px;
     border-radius: 10px;
-    position: absolute;
-    right: 0px;
+    float: right;
 }
 .clearer {
     clear: both;
@@ -60,4 +59,7 @@ body {
     padding: 10px;
     border-radius: 8px;
     background: yellow;
+}
+#logoutButton {
+    float: right;
 }
