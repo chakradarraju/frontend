@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>Twitter App</title>
+<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+<link type="text/css" rel="stylesheet" href="jscss/style.css" />
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container">
+<ul class="nav">
+<li class="active"><a href="#pattern1.gif">Pattern 1</a></li>
+<li><a href="#pattern2.png">Pattern 2</a></li>
+<li><a href="#pattern3.jpg">Pattern 3</a></li>
+<li><a href="#pattern4.jpg">Pattern 4</a></li>
+<li><a href="#pattern5.jpg">Pattern 5</a></li>
+<li><a href="#pattern6.gif">Pattern 6</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="ticker"></div>
+<div id="content-wrapper">
+<div class="well form-inline">
+<div id="message"></div>
+<label for="emailid">Email Id:</label><input type="text" id="emailid" placeholder="Email..." /><br/>
+<div id="span_username" style="display:none;">
+<label for="username">Username:</label><input type="text" id="username" placeholder="Username..." /><br/>
+</div>
+<label for="password">Password:</label><input type="password" id="password" placeholder="Password..." /><br/>
+<button id="loginButton" class="btn btn-primary">Login</button>
+<button id="registerButton" class="btn btn-success">Register</button>
+</div>
+</div>
+<script src="jscss/jquery.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<script>
+$("#loginButton").click(function() {
+    $.post("/backend/login/", {
+        'emailid': $("#emailid").val(),
+        'password': $("#password").val(),
+    }, function(data) {
+        if(data['message']=="Login success")
+            window.location.href = "/frontend/";
+        else
+            $("#message").html(data['message']);
+    }, "json");
+});
+$("#registerButton").click(function() {
+    if($("#span_username").is(":hidden")) {
+        $("#span_username").slideDown();
+        $("#message").html("Complete your profile to register");
+    } else {
+        $.post("/backend/register/", {
+            'emailid': $("#emailid").val(),
+            'username': $("#username").val(),
+            'password': $("#password").val(),
+        }, function(data) {
+            $("#message").html(data['message']);
+            $("#span_username").slideUp();
+        }, "json");
+    }
+});
+</script>
+</body>
+</html>
