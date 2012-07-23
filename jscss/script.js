@@ -31,8 +31,8 @@ resizeIt();
 $("#postBtn").click(function() {
     $("#ticker").html("Posting tweet...");
     $("#ticker").fadeIn();
-    $.post("post/",{
-            'tweet':$("#tweetBox").val()
+    $.post("/backend/post/",{
+            'postcontent':$("#tweetBox").val()
         }, function() {
             $("#ticker").fadeOut(); 
             $("#tweetBox").fadeOut(function() {
@@ -43,3 +43,14 @@ $("#postBtn").click(function() {
             });
         });
 });
+$.get('/backend/feed/',{},function(data) {
+    var html = "";
+    for(tweetid in data['tweets']) {
+        var tweet = data['tweets'][tweetid];
+        html += "<div class='tweet'>";
+        html += "<span class='user'>"+tweet['sourceuser']+"</span><br/>";
+        html += tweet['postcontent'];
+        html += "</div>";
+    }
+    $("#tweetsContainer").html(html);
+}, "json");
