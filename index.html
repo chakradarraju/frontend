@@ -9,12 +9,8 @@
 <div class="navbar-inner">
 <div class="container">
 <ul class="nav">
-<li class="active"><a href="#pattern1.gif">Pattern 1</a></li>
-<li><a href="#pattern2.png">Pattern 2</a></li>
-<li><a href="#pattern3.jpg">Pattern 3</a></li>
-<li><a href="#pattern4.jpg">Pattern 4</a></li>
-<li><a href="#pattern5.jpg">Pattern 5</a></li>
-<li><a href="#pattern6.gif">Pattern 6</a></li>
+<li class="active"><a href="#feed">Feeds</a></li>
+<li><a href="#myprofile">Profile</a></li>
 </ul>
 <button id="logoutButton" class="btn btn-danger"><i class="icon-off icon-white"></i> Logout</button>
 <input type="text" id="searchBox" class="search-query" placeholder="Search..." />
@@ -23,6 +19,10 @@
 </div>
 <div id="ticker"></div>
 <div id="content-wrapper">
+
+</div>
+
+<script type="text/html" id="tmpl-feed">
     <div id="dashboard">
         <div class="brick">Dashboard</div>
         <div class="brick">Brick 2</div>
@@ -41,18 +41,38 @@
             <h2>Tweets feed:</h2>
             <div id="tweetsContainer">
                 <div class="tweet">
-                <span class="user">Exuser1:</span><br/>
-                Example Tweet1
+                    <span class="user">Exuser1:</span><br/>
+                    Example Tweet1
                 </div>
                 <div class="tweet">
-                <span class="user">Exuser2:</span><br/>
-                Example Tweet2
+                    <span class="user">Exuser2:</span><br/>
+                    Example Tweet2
                 </div>
             </div>
             <div class="clearer"></div>
         </div>
     </div>
-</div>
+</script>
+
+<script type="text/html" id="tmpl-profile">
+    <div id="content-main">
+        <div class="brick">
+            <h2>Tweets feed:</h2>
+            <div id="tweetsContainer">
+                <div class="tweet">
+                    <span class="user">Exuser1:</span><br/>
+                    Example Tweet1
+                </div>
+                <div class="tweet">
+                    <span class="user">Exuser2:</span><br/>
+                    Example Tweet2
+                </div>
+            </div>
+            <div class="clearer"></div>
+        </div>
+    </div>
+</script>
+
 <script src="jscss/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/script.js"></script>
