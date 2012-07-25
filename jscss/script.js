@@ -1,9 +1,6 @@
 // Event Handlers
 
 $("li a").click(function() {
-    var lielement = $(this).parent();
-    $(lielement).siblings().removeClass("active");
-    $(lielement).addClass("active");
     var tab = $(this).attr("href").substr(1);
     showTab(tab);
     navBarHandler(tab);
@@ -33,12 +30,11 @@ $("#clearBtn").click(function() {
     });
 });
 $("#postBtn").click(function() {
-    $("#ticker").html("Posting tweet...");
-    $("#ticker").fadeIn();
+    showTicker("Posting tweet...");
     $.post("/backend/post/",{
         'postcontent':$("#tweetBox").val()
     }, function() {
-        $("#ticker").fadeOut();
+        hideTicker();
         $("#tweetBox").fadeOut(function() {
             $("#tweetBox").val("");
             resizeIt();
@@ -53,6 +49,13 @@ setInterval(refreshTimes, 10000);
 
 // functions
 
+function showTicker(text) {
+    $("#ticker").html(text);
+    $("#ticker").fadeIn();
+}
+function hideTicker(text) {
+    $("#ticker").fadeOut();
+}
 function refreshTimes() {
     $(".active .timestamp").each(function() {
         var dur = new Date() - new Date(parseInt($(this).attr('ref')));
@@ -62,6 +65,8 @@ function refreshTimes() {
 function showTab(tab) {
     $(".sector").removeClass("active");
     $("#tab-"+tab).addClass("active");
+    $(".menuitem").removeClass("active");
+    $("#menu-"+tab).addClass("active");
 }
 function navBarHandler(href) {
     if(href=="feed") {
@@ -90,6 +95,7 @@ function timeDiff(dur) {
     return dur + " days";
 }
 function updateFeed() {
+    showTicker("Updating Feed...");
     $.get('/backend/feed/',{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
@@ -108,22 +114,28 @@ function updateFeed() {
             }
         }
         refreshTimes();
+        hideTicker();
     }, "json");
 }
 
 function updateProfile(userid) {
+    showTicker("Loading Profile...");
     if(arguments.length==0) url = '/backend/myprofile/';
     else url = '/backend/profile/'+userid;
     $.get(url,{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
         userid = data['userid'];
+        if(userid!=profileUserId) {
+            $("#tweetContainer").html("");
+            profileUserId = userid;
+        }
         $("#profile-emailid").html(data['emailid']);
         $("#profile-username").html(data['username']);
         data['followerslist'] = JSON.parse(data['followerslist']);
         data['followinglist'] = JSON.parse(data['followinglist']);
-        $("#profile-followers-count").html(data['followerslist'][0]['username']);
-        $("#profile-following-count").html(data['followinglist'][0]['username']);
+        $("#profile-followers-count").html(data['followerslist'].length);
+        $("#profile-following-count").html(data['followinglist'].length);
         for(tweetid in data['tweets']) {
             var tweet = data['tweets'][tweetid];
             if(!document.getElementById("tweet-"+tweet['postid'])) {
@@ -143,8 +155,13 @@ function updateProfile(userid) {
                 alert(data['message']);
             }, "json");
         });
+        hideTicker();
     },"json");
 }
+
+// Data
+
+var profileUserId = null;
 
 // Bootup code
 
