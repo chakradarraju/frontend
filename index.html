@@ -10,7 +10,7 @@
 <div class="container">
 <ul class="nav">
 <li class="active"><a href="#feed">Feeds</a></li>
-<li><a href="#myprofile">Profile</a></li>
+<li><a href="#profile">Profile</a></li>
 </ul>
 <button id="logoutButton" class="btn btn-danger"><i class="icon-off icon-white"></i> Logout</button>
 <input type="text" id="searchBox" class="search-query" placeholder="Search..." />
@@ -20,61 +20,61 @@
 <div id="ticker"></div>
 <div id="content-wrapper">
 
+    <!-- feed -->
+    <div id="tab-feed" class="sector">
+        <div id="dashboard">
+            <div class="brick">Dashboard</div>
+            <div class="brick">Brick 2</div>
+        </div>
+        <div id="content-feed">
+            <div class="brick">
+                <div class="tweetBoxContainer">
+                    <h3 style="display:none">Write a tweet:</h3>
+                    <textarea id="tweetBox" placeholder="Wassup?"></textarea>
+                    <div style="display:none">
+                        <button id="postBtn" class="btn btn-primary">Post</button>
+                        <button id="clearBtn" class="btn">Clear</button>
+                    </div>
+                </div>
+                <hr/>
+                <h2>Tweets feed:</h2>
+                <div id="feedContainer" class="tweetsContainer">
+                </div>
+                <div class="clearer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- profile -->
+    <div id="tab-profile" class="sector">
+        <div id="content-profile">
+            <div class="brick">
+                <button class="btn btn-primary btn-large" id="followButton" style="float:right;">Follow</button>
+                Username: <span id="profile-username"></span><br/>
+                EmailId: <span id="profile-emailid"></span><br/>
+                Followers count: <span id="profile-followers-count"></span><br/>
+                Following count: <span id="profile-following-count"></span><br/>
+            </div>
+            <div class="brick">
+                <h2>Tweets feed:</h2>
+                <div id="tweetContainer" class="tweetsContainer">
+                </div>
+                <div class="clearer"></div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
-<script type="text/html" id="tmpl-feed">
-    <div id="dashboard">
-        <div class="brick">Dashboard</div>
-        <div class="brick">Brick 2</div>
-    </div>
-    <div id="content-main">
-        <div class="brick">
-            <div class="tweetBoxContainer">
-                <h3 style="display:none">Write a tweet:</h3>
-                <textarea id="tweetBox" placeholder="Wassup?"></textarea>
-                <div style="display:none">
-                    <button id="postBtn" class="btn btn-primary">Post</button>
-                    <button id="clearBtn" class="btn">Clear</button>
-                </div>
-            </div>
-            <hr/>
-            <h2>Tweets feed:</h2>
-            <div id="tweetsContainer">
-                <div class="tweet">
-                    <span class="user">Exuser1:</span><br/>
-                    Example Tweet1
-                </div>
-                <div class="tweet">
-                    <span class="user">Exuser2:</span><br/>
-                    Example Tweet2
-                </div>
-            </div>
-            <div class="clearer"></div>
-        </div>
-    </div>
-</script>
-
-<script type="text/html" id="tmpl-profile">
-    <div id="content-main">
-        <div class="brick">
-            <h2>Tweets feed:</h2>
-            <div id="tweetsContainer">
-                <div class="tweet">
-                    <span class="user">Exuser1:</span><br/>
-                    Example Tweet1
-                </div>
-                <div class="tweet">
-                    <span class="user">Exuser2:</span><br/>
-                    Example Tweet2
-                </div>
-            </div>
-            <div class="clearer"></div>
-        </div>
-    </div>
-</script>
-
 <script src="jscss/jquery.js"></script>
+<script src="jscss/underscore.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/script.js"></script>
+<script type="text/html" id="tmpl-tweet">
+    <div class="tweet" id="<%=tweetid%>" style="display:none">
+        <span class="user"><a href="#profile/<%=userid%>" onclick="showTab('profile'); updateProfile(<%=userid%>);"><%=username%></a></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
+        <%=tweet%>
+    </div>
+</script>
 </body>
 </html>

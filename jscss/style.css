@@ -16,7 +16,7 @@ body {
     float: left;
     width: 300px;
 }
-#content-main {
+#content-feed {
     float: right;
     width: 600px;
 }
@@ -26,7 +26,7 @@ body {
     border-radius: 20px 7px;
     background: white;
 }
-#content-main .brick {
+#content-feed .brick {
     padding: 20px;
 }
 #searchBox {
@@ -38,7 +38,7 @@ body {
 .clearer {
     clear: both;
 }
-#tweetsContainer {
+.tweetsContainer {
     padding: 5px;
 }
 .tweet {
@@ -61,5 +61,14 @@ body {
     background: yellow;
 }
 #logoutButton {
+    float: right;
+}
+div.sector.active {
+    display: block;
+}
+div.sector {
+    display: none;
+}
+.timestamp {
     float: right;
 }
