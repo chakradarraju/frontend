@@ -45,11 +45,21 @@ $("#postBtn").click(function() {
     });
 });
 $("#tweetBox").keydown(resizeIt);
+$("#searchBox").keypress(function(e) {
+    if(e.keyCode==13) {
+        search($("#searchBox").val());
+        showTab('search');
+    }
+});
 setInterval(refreshTimes, 10000);
 setInterval(refreshFeed, 4000);
 
 // functions
 
+function showProfile(userid) {
+    showTab('profile');
+    updateProfile(userid);
+}
 function refreshFeed() {
     if($("#tab-feed").hasClass("active")) updateFeed(false);
 }
@@ -63,7 +73,7 @@ function hideTicker(text) {
 function refreshTimes() {
     $(".active .timestamp").each(function() {
         var dur = new Date() - new Date(parseInt($(this).attr('ref')));
-        $(this).html(timeDiff(dur)+" ago");
+        $(this).html("about "+timeDiff(dur)+" ago");
     });
 }
 function showTab(tab) {
@@ -88,13 +98,17 @@ function something(a) {
     alert(a);
     return timeDiff(new Date()-new Date(a.attr('href')));
 }
+function round5(x) {
+    var ret = parseInt((x+5)/5)*5;
+    return ret;
+}
 function timeDiff(dur) {
     dur = Math.ceil(dur/1000);
-    if(dur<60) return dur + " sec";
+    if(dur<55) return "few secs";
     dur = Math.ceil(dur/60);
-    if(dur<60) return dur + " min";
+    if(dur<55) return round5(dur) + " min";
     dur = Math.ceil(dur/60);
-    if(dur<24) return dur + " hrs";
+    if(dur<24) return dur + " hr";
     dur = Math.ceil(dur/24);
     return dur + " days";
 }
@@ -112,6 +126,7 @@ function updateFeed() {
             var tweet = data['tweets'][tweetid];
             if(!document.getElementById("feed-"+tweet['postid'])) {
                 tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
+                tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
                 $("#feedContainer").prepend(_.template($("#tmpl-tweet").html(),{
                     username: tweet['sourceuser']['username'],
                     userid: tweet['sourceuser']['userid'],
@@ -148,6 +163,7 @@ function updateProfile(userid) {
         $("#profile-following-count").html(data['followinglist'].length);
         for(tweetid in data['tweets']) {
             var tweet = data['tweets'][tweetid];
+            tweet['postcontent'] = tweet['postcontent'].replace("\n","<br/>");
             if(!document.getElementById("tweet-"+tweet['postid'])) {
                 $("#tweetContainer").prepend(_.template($("#tmpl-tweet").html(),{
                     username: data['username'],
@@ -163,15 +179,66 @@ function updateProfile(userid) {
         $("#followButton").click(function() {
             $.get('/backend/follow/'+userid,{},function(data) {
                 alert(data['message']);
+                $("#followButton").hide();
+                $("#unfollowButton").show();
             }, "json");
-        });
+        }).hide();
+        $("#unfollowButton").click(function() {
+            $.get('/backend/unfollow/'+userid,{},function(data) {
+                alert(data['message']);
+                $("#unfollowButton").hide();
+                $("#followButton").show();
+            })
+        }).hide();
+        if(data['userid']==myProfile['userid']) {}
+        else if(following(data['userid'])) $("#unfollowButton").show();
+        else $("#followButton").show();
         hideTicker();
     },"json");
 }
 
+function search(text) {
+    showTicker("Searching...");
+    $.post('/backend/search/',{ query: text },function(data) {
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        $("#search-query").html(data['query']);
+        $("#search-count").html(data['search'].length);
+        $("#searchContainer").html("");
+        for(i in data['search']) {
+            var user = data['search'][i];
+            user['followers'] = JSON.parse(user['followers']);
+            $("#searchContainer").append(_.template($("#tmpl-user").html(),{
+                searchid: "search-"+i,
+                userid: user['userid'],
+                username: user['username'],
+                emailid: user['emailid'],
+                followers: user['followers']
+            }));
+            $("#searchContainer :hidden").slideDown();
+        }
+        hideTicker();
+    }, "json");
+}
+
+
 // Data
 
 var profileUserId = null;
+var myProfile = null;
+$.get('/backend/myprofile/',{},function(data) {
+    data['followerslist'] = JSON.parse(data['followerslist']);
+    data['followinglist'] = JSON.parse(data['followinglist']);
+    myProfile = data;
+}, "json");
+
+function following(userid) {
+    for(i in myProfile['followinglist']) {
+        if(myProfile['followinglist'][i]['userid']==userid)
+            return true;
+    }
+    return false;
+}
 
 // Bootup code
 
