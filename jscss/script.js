@@ -49,13 +49,47 @@ $("#searchBox").keypress(function(e) {
     if(e.keyCode==13) {
         search($("#searchBox").val());
         showTab('search');
+        $("#searchBox").val("");
     }
+});
+$("#followButton").click(function() {
+    $.get('/backend/follow/'+profileUserId,{},function(data) {
+        alert(data['message']);
+        $("#followButton").hide();
+        $("#unfollowButton").show();
+    }, "json");
+});
+$("#unfollowButton").click(function() {
+    $.get('/backend/unfollow/'+profileUserId,{},function(data) {
+        alert(data['message']);
+        $("#unfollowButton").hide();
+        $("#followButton").show();
+    })
 });
 setInterval(refreshTimes, 10000);
 setInterval(refreshFeed, 4000);
 
 // functions
 
+var prevURL = null;
+function popup(list) {
+    $("#popupClose").href=window.url;
+    $("#popupContainer").html("");
+    _.each(displayedProfile[list+'list'], function(user,i) {
+        $("#popupContainer").append(_.template($("#tmpl-user").html(), {
+            id: list+"-"+i,
+            userid: user['userid'],
+            username: user['username'],
+            emailid: user['emailid']
+        }));
+    });
+    $("#popupContainer :hidden").show();
+    $("#popup").fadeIn();
+}
+function closepopup() {
+    $("#popup").fadeOut();
+    window.url = prevURL;
+}
 function showProfile(userid) {
     showTab('profile');
     updateProfile(userid);
@@ -77,6 +111,7 @@ function refreshTimes() {
     });
 }
 function showTab(tab) {
+    closepopup();
     $(".sector").removeClass("active");
     $("#tab-"+tab).addClass("active");
     $(".menuitem").removeClass("active");
@@ -155,10 +190,16 @@ function updateProfile(userid) {
             $("#tweetContainer").html("");
             profileUserId = userid;
         }
-        $("#profile-emailid").html(data['emailid']);
-        $("#profile-username").html(data['username']);
         data['followerslist'] = JSON.parse(data['followerslist']);
         data['followinglist'] = JSON.parse(data['followinglist']);
+        $("#followers-popup-link").attr("href","#profile/"+profileUserId+"/followers");
+        $("#following-popup-link").attr("href","#profile/"+profileUserId+"/following");
+        $("#followers-popup-link").attr("onclick","popup('followers');");
+        $("#following-popup-link").attr("onclick","popup('following');");
+        displayedProfile = data;
+        if(userid==myProfile['userid']) myProfile = data;
+        $("#profile-emailid").html(data['emailid']);
+        $("#profile-username").html(data['username']);
         $("#profile-followers-count").html(data['followerslist'].length);
         $("#profile-following-count").html(data['followinglist'].length);
         for(tweetid in data['tweets']) {
@@ -176,20 +217,8 @@ function updateProfile(userid) {
             }
         }
         refreshTimes();
-        $("#followButton").click(function() {
-            $.get('/backend/follow/'+userid,{},function(data) {
-                alert(data['message']);
-                $("#followButton").hide();
-                $("#unfollowButton").show();
-            }, "json");
-        }).hide();
-        $("#unfollowButton").click(function() {
-            $.get('/backend/unfollow/'+userid,{},function(data) {
-                alert(data['message']);
-                $("#unfollowButton").hide();
-                $("#followButton").show();
-            })
-        }).hide();
+        $("#followButton").hide();
+        $("#unfollowButton").hide();
         if(data['userid']==myProfile['userid']) {}
         else if(following(data['userid'])) $("#unfollowButton").show();
         else $("#followButton").show();
@@ -209,7 +238,7 @@ function search(text) {
             var user = data['search'][i];
             user['followers'] = JSON.parse(user['followers']);
             $("#searchContainer").append(_.template($("#tmpl-user").html(),{
-                searchid: "search-"+i,
+                id: "search-"+i,
                 userid: user['userid'],
                 username: user['username'],
                 emailid: user['emailid'],
@@ -226,7 +255,10 @@ function search(text) {
 
 var profileUserId = null;
 var myProfile = null;
+var displayedProfile = null;
 $.get('/backend/myprofile/',{},function(data) {
+    if(data['display']=="login")
+        window.location = "/frontend/login.html";
     data['followerslist'] = JSON.parse(data['followerslist']);
     data['followinglist'] = JSON.parse(data['followinglist']);
     myProfile = data;

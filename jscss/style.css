@@ -43,7 +43,6 @@ body {
     padding: 5px;
 }
 .tweet {
-    padding: 5px 10px 23px 10px;
     border-bottom: 1px dashed black;
 }
 .user {
@@ -73,9 +72,35 @@ div.sector {
 .timestamp {
     float: right;
 }
+.listing {
+    padding: 5px 10px 23px 10px;
+}
 .listing:nth-child(odd) {
     background: #f3f3f3;
 }
 .tweet:hover {
     background: #d3d3d3;
+}
+#popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -250px;
+    height: 300px;
+    width: 500px;
+    display: none;
+    border: 10px solid rgba(82, 82, 82, 0.7);
+    padding: 10px;
+    border-radius: 8px;
+}
+#popupInner {
+    background: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
