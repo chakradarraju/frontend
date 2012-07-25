@@ -46,9 +46,13 @@ $("#postBtn").click(function() {
 });
 $("#tweetBox").keydown(resizeIt);
 setInterval(refreshTimes, 10000);
+setInterval(refreshFeed, 4000);
 
 // functions
 
+function refreshFeed() {
+    if($("#tab-feed").hasClass("active")) updateFeed(false);
+}
 function showTicker(text) {
     $("#ticker").html(text);
     $("#ticker").fadeIn();
@@ -94,8 +98,13 @@ function timeDiff(dur) {
     dur = Math.ceil(dur/24);
     return dur + " days";
 }
+
 function updateFeed() {
-    showTicker("Updating Feed...");
+    var ticker = false;
+    if(arguments.length==0)
+        ticker = true;
+    if(ticker)
+        showTicker("Updating Feed...");
     $.get('/backend/feed/',{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
@@ -114,7 +123,8 @@ function updateFeed() {
             }
         }
         refreshTimes();
-        hideTicker();
+        if(ticker)
+            hideTicker();
     }, "json");
 }
 
