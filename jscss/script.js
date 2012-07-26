@@ -1,6 +1,6 @@
 // Event Handlers
 
-$("li a").click(function() {
+$("#navbar li a").click(function() {
     var tab = $(this).attr("href").substr(1);
     showTab(tab);
     navBarHandler(tab);
@@ -53,7 +53,16 @@ $("#searchBox").keypress(function(e) {
     }
 });
 $("#followButton").click(function() {
+    console.log("before request");
     $.get('/backend/follow/'+profileUserId,{},function(data) {
+        console.log("got response");
+        console.log(data);
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        myProfile = data['myProfile'];
+        myProfile['followerslist'] = JSON.parse(myProfile['followerslist']);
+        myProfile['followinglist'] = JSON.parse(myProfile['followinglist']);
+        console.log(myProfile);
         alert(data['message']);
         $("#followButton").hide();
         $("#unfollowButton").show();
@@ -61,12 +70,17 @@ $("#followButton").click(function() {
 });
 $("#unfollowButton").click(function() {
     $.get('/backend/unfollow/'+profileUserId,{},function(data) {
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        myProfile = data['myProfile'];
+        myProfile['followerslist'] = JSON.parse(myProfile['followerslist']);
+        myProfile['followinglist'] = JSON.parse(myProfile['followinglist']);
         alert(data['message']);
         $("#unfollowButton").hide();
         $("#followButton").show();
-    })
+    }, "json");
 });
-setInterval(refreshTimes, 10000);
+setInterval(refreshTimes, 30000);
 setInterval(refreshFeed, 4000);
 
 // functions
@@ -232,24 +246,44 @@ function search(text) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
         $("#search-query").html(data['query']);
-        $("#search-count").html(data['search'].length);
-        $("#searchContainer").html("");
-        for(i in data['search']) {
-            var user = data['search'][i];
+        $("#search-user-count").html(data['users'].length);
+        $("#search-tweet-count").html(data['tweets'].length);
+        $("#searchUserTab a").html("Users ("+data['users'].length+")");
+        $("#searchTweetTab a").html("Tweets ("+data['tweets'].length+")");
+        $("#searchUserContainer").html("");
+        $("#searchTweetContainer").html("");
+        _.each(data['users'], function (user,i) {
             user['followers'] = JSON.parse(user['followers']);
-            $("#searchContainer").append(_.template($("#tmpl-user").html(),{
-                id: "search-"+i,
+            $("#searchUserContainer").append(_.template($("#tmpl-user").html(),{
+                id: "search-user-"+i,
                 userid: user['userid'],
                 username: user['username'],
                 emailid: user['emailid'],
                 followers: user['followers']
             }));
-            $("#searchContainer :hidden").slideDown();
-        }
+        });
+        _.each(data['tweets'], function (tweet,i) {
+            console.log(tweet);
+            $("#searchTweetContainer").append(_.template($("#tmpl-tweet").html(), {
+                tweetid: "search-tweet-"+i,
+                userid: tweet['userid'],
+                username: tweet['userid'],
+                timestamp: tweet['timestamp'],
+                tweet: tweet['postcontent']
+            }));
+        });
+        $("#searchUserContainer :hidden").slideDown();
+        $("#searchTweetContainer :hidden").slideDown();
         hideTicker();
     }, "json");
 }
 
+function changesearchTab(tab) {
+    $(".searchTab").removeClass("active");
+    $("#search"+tab+"Tab").addClass("active");
+    $(".searchContainer").removeClass("active");
+    $("#search"+tab+"Container").addClass("active");
+}
 
 // Data
 
