@@ -253,21 +253,22 @@ function search(text) {
         $("#searchUserContainer").html("");
         $("#searchTweetContainer").html("");
         _.each(data['users'], function (user,i) {
-            user['followers'] = JSON.parse(user['followers']);
+            user['followerslist'] = JSON.parse(user['followerslist']);
             $("#searchUserContainer").append(_.template($("#tmpl-user").html(),{
                 id: "search-user-"+i,
                 userid: user['userid'],
                 username: user['username'],
                 emailid: user['emailid'],
-                followers: user['followers']
+                followers: user['followerslist']
             }));
         });
         _.each(data['tweets'], function (tweet,i) {
             console.log(tweet);
+            tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             $("#searchTweetContainer").append(_.template($("#tmpl-tweet").html(), {
                 tweetid: "search-tweet-"+i,
                 userid: tweet['userid'],
-                username: tweet['userid'],
+                username: tweet['sourceuser']['username'],
                 timestamp: tweet['timestamp'],
                 tweet: tweet['postcontent']
             }));
