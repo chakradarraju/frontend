@@ -4,12 +4,19 @@ body {
     padding: 0px;
     text-align: center;
 }
+#background {
+    position: fixed;
+    top:0;
+    bottom: 0;
+    width: 950px;
+    left: 50%;
+    margin-left: -475px;
+    background: rgba(10,10,10,0.8);
+}
 #content-wrapper {
     position: relative;
-    background: rgba(10,10,10,0.8);
     padding: 60px 25px;
     width: 900px;
-    height: 100%;
     margin: 0px auto;
     text-align: left;
 }
@@ -73,6 +80,7 @@ body {
     float: right;
 }
 .listing {
+    overflow: hidden;
     padding: 5px 10px 23px 10px;
 }
 .listing:nth-child(odd) {
@@ -104,9 +112,20 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
 }
+#closeButtonPop {
+    position: absolute;
+    margin-top: -10px;
+    margin-left: 440px;
+    padding: 10px;
+    z-index: 100;
+}
 .searchContainer {
     display: none;
 }
 .searchContainer.active {
     display: block;
+}
+.profileList {
+    width: 860px;
+    float: left;
 }
