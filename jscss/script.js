@@ -53,24 +53,20 @@ $("#followButton").click(function() {
     $.get('/backend/follow/'+profileUserId,{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        myProfile = data['myProfile'];
-        myProfile['followerslist'] = JSON.parse(myProfile['followerslist']);
-        myProfile['followinglist'] = JSON.parse(myProfile['followinglist']);
+        myProfile = processProfile(data['myProfile']);
+        displayedProfile = processProfile(data['currentProfile']);
+        showProfile(displayedProfile);
         alert(data['message']);
-        $("#followButton").hide();
-        $("#unfollowButton").show();
     }, "json");
 });
 $("#unfollowButton").click(function() {
     $.get('/backend/unfollow/'+profileUserId,{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        myProfile = data['myProfile'];
-        myProfile['followerslist'] = JSON.parse(myProfile['followerslist']);
-        myProfile['followinglist'] = JSON.parse(myProfile['followinglist']);
+        myProfile = processProfile(data['myProfile']);
+        displayedProfile = processProfile(data['currentProfile']);
+        showProfile(displayedProfile);
         alert(data['message']);
-        $("#unfollowButton").hide();
-        $("#followButton").show();
     }, "json");
 });
 $(document).keyup(function(e) {
@@ -205,17 +201,21 @@ function updateFeed() {
             hideTicker();
     }, "json");
 }
+function processProfile(profile) {
+    profile['followerslist'] = JSON.parse(profile['followerslist']);
+    profile['followinglist'] = JSON.parse(profile['followinglist']);
+    _.each(profile['tweets'], function(tweet) {
+        tweet['postcontent'] = tweet['postcontent'].replace("\n","<br/>");
+        tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
+    });
+    return profile;
+}
 function getProfile(userid,callback) {
     showTicker("Loading Profile...");
     if(userid==null) url = '/backend/myprofile/';
     else url = '/backend/profile/'+userid;
     $.get(url,{},function(data) {
-        data['followerslist'] = JSON.parse(data['followerslist']);
-        data['followinglist'] = JSON.parse(data['followinglist']);
-        _.each(data['tweets'], function(tweet) {
-            tweet['postcontent'] = tweet['postcontent'].replace("\n","<br/>");
-            tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
-        });
+        data = processProfile(data);
         if(userid==null) myProfile = data;
         callback(data);
         hideTicker();
