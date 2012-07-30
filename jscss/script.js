@@ -168,7 +168,9 @@ function timeDiff(dur) {
     dur = Math.ceil(dur/24);
     return dur + " days";
 }
-
+function trim(str) {
+    return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+}
 function updateFeed() {
     var ticker = false;
     if(arguments.length==0)
@@ -187,10 +189,13 @@ function updateFeed() {
         if(data['tweets'].length>0)
             latestFeedId = data['tweets'][0]['feedid'];
         data['tweets'] = data['tweets'].reverse();
+        if(data['tweets'].length>0&&(oldestFeedId==null||oldestFeedId>parseInt(data['tweets'][0]['feedid'])))
+            oldestFeedId = parseInt(data['tweets'][0]['feedid']);
         _.each(data['tweets'], function(tweet,tweetid) {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
-            tweet['id'] = "feed-"+tweetid;
+            tweet['id'] = "feed-"+tweet['feedid'];
+            tweet['gravatarhash'] = $.md5(trim(tweet['sourceuser']['emailid']).toLowerCase());
             $("#feedContainer").prepend(_.template($("#tmpl-tweet").html(),tweet));
         });
         $("#feedContainer :hidden").slideDown();
@@ -198,6 +203,25 @@ function updateFeed() {
         if(ticker)
             hideTicker();
     }, "json");
+}
+function loadOlderFeed() {
+    showTicker("Getting older feed");
+    $.get('/backend/feed/before',{"feedId":oldestFeedId},function(data) {
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        var length = data['tweets'].length;
+        if(length>0)
+            oldestFeedId = data['tweets'][length-1]['feedid'];
+        _.each(data['tweets'], function(tweet,tweetid) {
+            tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
+            tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
+            tweet['id'] = "feed-"+tweet['feedid'];
+            $("#feedContainer").append(_.template($("#tmpl-tweet").html(),tweet));
+        });
+        $("#feedContainer :hidden").slideDown();
+        refreshTimes();
+        hideTicker();
+    },"json");
 }
 function processProfile(profile) {
     profile['followerslist'] = JSON.parse(profile['followerslist']);
@@ -219,6 +243,9 @@ function getProfile(userid,callback) {
         hideTicker();
     }, "json");
 }
+function gravatarhash(emailid) {
+    return $.md5(trim(emailid).toLowerCase());
+}
 function showProfile(profile) {
     var userid = profile['userid'];
     if(userid!=profileUserId) {
@@ -226,6 +253,7 @@ function showProfile(profile) {
         profileUserId = userid;
     }
     displayedProfile = profile;
+    $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=100")
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
     $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['tweets'].length);
@@ -248,6 +276,10 @@ function showProfile(profile) {
 function populateList(container,list,template,prefix) {
     _.each(list,function(item,id) {
         item['id'] = prefix+id;
+        if(item['sourceuser'])
+            item['gravatarhash'] = gravatarhash(item['sourceuser']['emailid']);
+        else
+            item['gravatarhash'] = gravatarhash(item['emailid']);
         if(!document.getElementById(item['id']))
             container.prepend(_.template(template,item));
     });
@@ -292,6 +324,7 @@ function changesearchTab(tab) {
 // Data
 
 var latestFeedId = null;
+var oldestFeedId = null;
 var profileUserId = null;
 var myProfile = null;
 var displayedProfile = null;

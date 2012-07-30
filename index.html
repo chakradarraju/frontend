@@ -42,6 +42,7 @@
                 <h2>Tweets feed:</h2>
                 <div id="feedContainer" class="tweetsContainer">
                 </div>
+                <div style="text-align: center"><a onclick="loadOlderFeed()">Load more tweets</a></div>
                 <div class="clearer"></div>
             </div>
         </div>
@@ -51,6 +52,7 @@
     <div id="tab-profile" class="sector">
         <div id="content-profile">
             <div class="brick">
+                <img id="profileImage" src="" class="gravatar"/>
                 <button class="btn btn-primary btn-large" id="followButton" style="float:right;display:none;">Follow</button>
                 <button class="btn btn-primary btn-large" id="unfollowButton" style="float:right;display:none;">UnFollow</button>
                 <h2><span id="profileUsername"></span></h2>
@@ -58,6 +60,7 @@
                 Tweets: <a id="profileTweetsLink" href="#"></a><br/>
                 Followers: <a id="profileFollowersLink" href="#"></a><br/>
                 Following: <a id="profileFollowingLink" href="#"></a><br/>
+                <div class="clearer"></div>
             </div>
             <div class="brick" style="overflow: hidden;">
                 <div style="overflow: hidden;">
@@ -116,15 +119,18 @@
 <script src="jscss/jquery.js"></script>
 <script src="jscss/underscore.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
+<script src="jscss/md5.js"></script>
 <script src="jscss/script.js"></script>
 <script type="text/html" id="tmpl-tweet">
     <div class="tweet listing" id="<%=id%>" style="display:none">
+        <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
         <span class="user"><a href="#profile/<%=sourceuser['userid']%>"><%=sourceuser['username']%></a></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
         <%=postcontent%>
     </div>
 </script>
 <script type="text/html" id="tmpl-user">
     <div class="listing" id="<%=id%>" style="display:none;">
+        <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
         <span class="user"><a href="#profile/<%=userid%>"><%=username%></a> </span><br/>
         <span class="email"> EmailId: <%=emailid%></span><br/>
         <% if(typeof followers !== 'undefined' && followers.length > 0) { %>

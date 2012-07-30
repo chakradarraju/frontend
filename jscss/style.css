@@ -81,7 +81,7 @@ body {
 }
 .listing {
     overflow: hidden;
-    padding: 5px 10px 23px 10px;
+    padding: 15px;
 }
 .listing:nth-child(odd) {
     background: #f3f3f3;
@@ -127,5 +127,9 @@ body {
 }
 .profileList {
     width: 860px;
+    float: left;
+}
+.gravatar {
+    margin-right: 15px;
     float: left;
 }
