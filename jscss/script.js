@@ -44,8 +44,6 @@ $("#searchBox").keypress(function(e) {
     if(e.keyCode==13) {
         var query = $("#searchBox").val();
         window.location.hash = "#search/"+query;
-        $("#searchUserLink").attr("href","#search/"+query+"/users");
-        $("#searchTweetLink").attr("href","#search/"+query+"/tweets");
         $("#searchBox").val("");
     }
 });
@@ -271,6 +269,8 @@ function search(text) {
     }, "json");
 }
 function showSearch(result) {
+    $("#searchUserLink").attr("href","#search/"+result['query']+"/users");
+    $("#searchTweetLink").attr("href","#search/"+result['query']+"/tweets");
     $("#search-query").html(result['query']);
     $("#search-user-count").html(result['users'].length);
     $("#search-tweet-count").html(result['tweets'].length);
