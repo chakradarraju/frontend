@@ -299,9 +299,7 @@ var displayedSearch = null;
 $.get('/backend/myprofile/',{},function(data) {
     if(data['display']=="login")
         window.location = "/frontend/login.html";
-    data['followerslist'] = JSON.parse(data['followerslist']);
-    data['followinglist'] = JSON.parse(data['followinglist']);
-    myProfile = data;
+    myProfile = processProfile(data);
 }, "json");
 
 function following(userid) {
