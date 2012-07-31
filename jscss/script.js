@@ -275,7 +275,7 @@ function showProfile(profile) {
     $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=100")
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
-    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['tweetsCount']);
+    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['postcount']);
     $("#profileFollowersLink").attr("href","#profile/"+profileUserId+"/followers").html(profile['followerslist'].length);
     $("#profileFollowingLink").attr("href","#profile/"+profileUserId+"/following").html(profile['followinglist'].length);
     profile['tweets'] = profile['tweets'].reverse();
