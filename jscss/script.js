@@ -205,7 +205,7 @@ function updateFeed() {
     }, "json");
 }
 function loadOlderFeed() {
-    showTicker("Getting older feed");
+    showTicker("Getting older feed...");
     $.get('/backend/feed/before',{"feedId":oldestFeedId},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
@@ -219,6 +219,25 @@ function loadOlderFeed() {
             $("#feedContainer").append(_.template($("#tmpl-tweet").html(),tweet));
         });
         $("#feedContainer :hidden").slideDown();
+        refreshTimes();
+        hideTicker();
+    },"json");
+}
+function loadOlderTweet() {
+    showTicker("Getting older tweets...");
+    $.get('/backend/tweets/before',{"postid":oldestTweetId,"userid":displayedProfile['userid']},function(data) {
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        var length = data['tweets'].length;
+        if(length>0)
+            oldestTweetId = data['tweets'][length-1]['postid'];
+        _.each(data['tweets'], function(tweet,tweetid) {
+            tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
+            tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
+            tweet['id'] = "feed-"+tweet['feedid'];
+            $("#tweetContainer").append(_.template($("#tmpl-tweet").html(),tweet));
+        });
+        $("#tweetContainer :hidden").slideDown();
         refreshTimes();
         hideTicker();
     },"json");
@@ -256,16 +275,18 @@ function showProfile(profile) {
     $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=100")
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
-    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['tweets'].length);
+    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['tweetsCount']);
     $("#profileFollowersLink").attr("href","#profile/"+profileUserId+"/followers").html(profile['followerslist'].length);
     $("#profileFollowingLink").attr("href","#profile/"+profileUserId+"/following").html(profile['followinglist'].length);
     profile['tweets'] = profile['tweets'].reverse();
     $("#tweetContainer").html("");
     $("#followersContainer").html("");
     $("#followingContainer").html("");
-    populateList($("#tweetContainer"),profile['tweets'],$("#tmpl-tweet").html(),"tweet-");
-    populateList($("#followersContainer"),profile['followerslist'],$("#tmpl-user").html(),"follower-");
-    populateList($("#followingContainer"),profile['followinglist'],$("#tmpl-user").html(),"following-");
+    var length = profile['tweets'].length;
+    oldestTweetId = parseInt(profile['tweets'][0]['postid']);
+    populateListByPrepend($("#tweetContainer"),profile['tweets'],$("#tmpl-tweet").html(),"tweet-","postid");
+    populateListByPrepend($("#followersContainer"),profile['followerslist'].slice(0,10),$("#tmpl-user").html(),"follower-","userid");
+    populateListByPrepend($("#followingContainer"),profile['followinglist'].slice(0,10),$("#tmpl-user").html(),"following-","userid");
     refreshTimes();
     $("#followButton").hide();
     $("#unfollowButton").hide();
@@ -273,15 +294,27 @@ function showProfile(profile) {
     else if(following(profile['userid'])) $("#unfollowButton").show();
     else $("#followButton").show();
 }
-function populateList(container,list,template,prefix) {
+function populateListByPrepend(container,list,template,prefix,idcol) {
     _.each(list,function(item,id) {
-        item['id'] = prefix+id;
+        item['id'] = prefix+item[idcol];
         if(item['sourceuser'])
             item['gravatarhash'] = gravatarhash(item['sourceuser']['emailid']);
         else
             item['gravatarhash'] = gravatarhash(item['emailid']);
         if(!document.getElementById(item['id']))
             container.prepend(_.template(template,item));
+    });
+    $(":hidden",container).slideDown();
+}
+function populateListByAppend(container,list,template,prefix,idcol) {
+    _.each(list,function(item,id) {
+        item['id'] = prefix+item[idcol];
+        if(item['sourceuser'])
+            item['gravatarhash'] = gravatarhash(item['sourceuser']['emailid']);
+        else
+            item['gravatarhash'] = gravatarhash(item['emailid']);
+        if(!document.getElementById(item['id']))
+            container.append(_.template(template,item));
     });
     $(":hidden",container).slideDown();
 }
@@ -310,8 +343,8 @@ function showSearch(result) {
     $("#searchTweetTab a").html("Tweets ("+result['tweets'].length+")");
     $("#searchUserContainer").html("");
     $("#searchTweetContainer").html("");
-    populateList($("#searchUserContainer"),result['users'],$("#tmpl-user").html(),"search-user-");
-    populateList($("#searchTweetContainer"),result['tweets'],$("#tmpl-tweet").html(),"search-tweet-");
+    populateListByPrepend($("#searchUserContainer"),result['users'],$("#tmpl-user").html(),"search-user-","userid");
+    populateListByPrepend($("#searchTweetContainer"),result['tweets'],$("#tmpl-tweet").html(),"search-tweet-","postid");
 }
 
 function changesearchTab(tab) {
@@ -320,11 +353,20 @@ function changesearchTab(tab) {
     $(".searchContainer").removeClass("active");
     $("#search"+tab+"Container").addClass("active");
 }
+function showMoreFollowing() {
+    var length = $("#followingContainer").children().length;
+    populateListByAppend($("#followingContainer"),displayedProfile['followinglist'].slice(length,length+10),$("#tmpl-user").html(),"following-","userid");
+}
+function showMoreFollowers() {
+    var length = $("#followersContainer").children().length;
+    populateListByAppend($("#followersContainer"),displayedProfile['followerslist'].slice(length,length+10),$("#tmpl-user").html(),"follower-","userid");
+}
 
 // Data
 
 var latestFeedId = null;
 var oldestFeedId = null;
+var oldestTweetId = null;
 var profileUserId = null;
 var myProfile = null;
 var displayedProfile = null;
