@@ -283,7 +283,10 @@ function showProfile(profile) {
     $("#followersContainer").html("");
     $("#followingContainer").html("");
     var length = profile['tweets'].length;
-    oldestTweetId = parseInt(profile['tweets'][0]['postid']);
+    if(profile['tweets'].length>0)
+        oldestTweetId = parseInt(profile['tweets'][0]['postid']);
+    else
+        oldestTweetId = 0;
     populateListByPrepend($("#tweetContainer"),profile['tweets'],$("#tmpl-tweet").html(),"tweet-","postid");
     populateListByPrepend($("#followersContainer"),profile['followerslist'].slice(0,10),$("#tmpl-user").html(),"follower-","userid");
     populateListByPrepend($("#followingContainer"),profile['followinglist'].slice(0,10),$("#tmpl-user").html(),"following-","userid");
