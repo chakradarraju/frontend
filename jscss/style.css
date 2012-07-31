@@ -133,3 +133,6 @@ body {
     margin-right: 15px;
     float: left;
 }
+.user a {
+    font-size: 16px;
+}

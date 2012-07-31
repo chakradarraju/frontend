@@ -25,7 +25,17 @@
     <!-- feed -->
     <div id="tab-feed" class="sector">
         <div id="dashboard">
-            <div class="brick">Dashboard</div>
+            <div class="brick">
+                <img src="" id="miniProfilePic" class="gravatar" alt="Profile Pic">
+                <h3><span id="miniProfileName"></span></h3>
+                @<span id="miniProfileId"></span><br/>
+                <div class="clearer"></div>
+                <div style="margin-top: 15px;">
+                    <a href="#" id="miniProfileTweetsLink"><span id="miniProfileTweets"></span> Tweets</a>
+                    <a href="#" id="miniProfileFollowersLink"><span id="miniProfileFollowers"></span> Followers</a>
+                    <a href="#" id="miniProfileFollowingLink"><span id="miniProfileFollowing"></span> Following</a>
+                </div>
+            </div>
             <div class="brick">Brick 2</div>
         </div>
         <div id="content-feed">
@@ -57,9 +67,9 @@
                 <button class="btn btn-primary btn-large" id="unfollowButton" style="float:right;display:none;">UnFollow</button>
                 <h2><span id="profileUsername"></span></h2>
                 EmailId: <span id="profileEmailId"></span><br/>
-                Tweets: <a id="profileTweetsLink" href="#"></a><br/>
-                Followers: <a id="profileFollowersLink" href="#"></a><br/>
-                Following: <a id="profileFollowingLink" href="#"></a><br/>
+                <a id="profileTweetsLink" href="#"><span id="profileTweets"></span> Tweets</a><br/>
+                <a id="profileFollowersLink" href="#"><span id="profileFollowers"></span> Followers</a><br/>
+                <a id="profileFollowingLink" href="#"><span id="profileFollowing"></span> Following</a><br/>
                 <div class="clearer"></div>
             </div>
             <div class="brick" style="overflow: hidden;">
@@ -127,14 +137,14 @@
 <script type="text/html" id="tmpl-tweet">
     <div class="tweet listing" id="<%=id%>" style="display:none">
         <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
-        <span class="user"><a href="#profile/<%=sourceuser['userid']%>"><%=sourceuser['username']%></a></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
+        <span class="user"><a href="#profile/<%=sourceuser['userid']%>"><%=sourceuser['username']%></a> @<%=sourceuser['userid']%></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
         <%=postcontent%>
     </div>
 </script>
 <script type="text/html" id="tmpl-user">
     <div class="listing" id="<%=id%>" style="display:none;">
         <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
-        <span class="user"><a href="#profile/<%=userid%>"><%=username%></a> </span><br/>
+        <span class="user"><a href="#profile/<%=userid%>"><%=username%></a> @<%=userid%></span><br/>
         <span class="email"> EmailId: <%=emailid%></span><br/>
         <% if(typeof followers !== 'undefined' && followers.length > 0) { %>
         <span class="followers">

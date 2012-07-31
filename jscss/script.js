@@ -171,6 +171,17 @@ function timeDiff(dur) {
 function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
+function updateMiniProfile(profile) {
+    $("#miniProfilePic").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=");
+    $("#miniProfileName").html(profile['username']);
+    $("#miniProfileId").html(profile['userid']);
+    $("#miniProfileTweets").html(profile['postcount']);
+    $("#miniProfileFollowers").html(profile['followerscount']);
+    $("#miniProfileFollowing").html(profile['followingcount']);
+    $("#miniProfileTweetsLink").attr("href","#profile/"+profile['userid']);
+    $("#miniProfileFollowersLink").attr("href","#profile/"+profile['userid']+"/followers");
+    $("#miniProfileFollowingLink").attr("href","#profile/"+profile['userid']+"/following");
+}
 function updateFeed() {
     var ticker = false;
     if(arguments.length==0)
@@ -275,9 +286,12 @@ function showProfile(profile) {
     $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=100")
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
-    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets").html(profile['postcount']);
-    $("#profileFollowersLink").attr("href","#profile/"+profileUserId+"/followers").html(profile['followerslist'].length);
-    $("#profileFollowingLink").attr("href","#profile/"+profileUserId+"/following").html(profile['followinglist'].length);
+    $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets");
+    $("#profileTweets").html(profile['postcount']);
+    $("#profileFollowersLink").attr("href","#profile/"+profileUserId+"/followers");
+    $("#profileFollowers").html(profile['followerscount']);
+    $("#profileFollowingLink").attr("href","#profile/"+profileUserId+"/following");
+    $("#profileFollowing").html(profile['followingcount']);
     profile['tweets'] = profile['tweets'].reverse();
     $("#tweetContainer").html("");
     $("#followersContainer").html("");
@@ -378,6 +392,7 @@ $.get('/backend/myprofile/',{},function(data) {
     if(data['display']=="login")
         window.location = "/frontend/login.html";
     myProfile = processProfile(data);
+    updateMiniProfile(myProfile);
 }, "json");
 
 function following(userid) {
