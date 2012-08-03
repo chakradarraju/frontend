@@ -2,7 +2,6 @@
 <head>
 <title>Twitter App</title>
 <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
-<link type="text/css" rel="stylesheet" href="jqueryui/css/flick/jquery-ui-1.8.22.custom.css" />
 <link type="text/css" rel="stylesheet" href="jscss/style.css" />
 </head>
 <body>
@@ -15,7 +14,7 @@
 <li id="menu-search" class="dropdown">
     <input type="text" id="searchBox" class="search-query" placeholder="Search..." />
     <ul class="dropdown-menu" id="searchList">
-        <li><a href="#search/hello">Search</a></li>
+        <li><a>Start typing to search users</a></li>
     </ul>
 </li>
 </ul>
@@ -70,7 +69,7 @@
             <div class="brick">
                 <img id="profileImage" src="" class="gravatar"/>
                 <button class="btn btn-primary btn-large" id="followButton" style="float:right;display:none;">Follow</button>
-                <button class="btn btn-primary btn-large" id="unfollowButton" style="float:right;display:none;">UnFollow</button>
+                <button class="btn btn-large" id="unfollowButton" style="float:right;display:none;">UnFollow</button>
                 <h2><span id="profileUsername"></span></h2>
                 EmailId: <span id="profileEmailId"></span><br/>
                 <a id="profileTweetsLink" href="#"><span id="profileTweets"></span> Tweets</a><br/>
@@ -136,7 +135,6 @@
 <div id="ticker"></div>
 
 <script src="jscss/jquery.js"></script>
-<script src="jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
 <script src="jscss/underscore.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
@@ -152,15 +150,10 @@
     <div class="listing" id="<%=id%>" style="display:none;">
         <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
         <span class="user"><a href="#profile/<%=userid%>"><%=username%></a> @<%=userid%></span><br/>
-        <span class="email"> EmailId: <%=emailid%></span><br/>
-        <% if(typeof followers !== 'undefined' && followers.length > 0) { %>
-        <span class="followers">
-            Followers:
-        <% _.each(followers, function(follower) { %>
-            <a href="#profile/<%=follower['userid']%>"><%=follower['username']%></a>,
-        <% }); %>
-        </span>
+        <% if(typeof postcount != 'undefined') { %>
+        <a href="#profile/<%=userid%>">Tweets: <%=postcount%></a> <a href="#profile/<%=userid%>/followers">Followers: <%=followerscount%></a> <a href="#profile/<%=userid%>/following">Following: <%=followingcount%></a><br/>
         <% } %>
+        <span class="email"> EmailId: <%=emailid%></span><br/>
     </div>
 </script>
 <script type="text/html" id="tmpl-user-search-popup">

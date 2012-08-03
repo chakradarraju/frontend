@@ -46,7 +46,6 @@ $("#searchBox").keyup(function(e) {
     var searchContent = "";
     if(e.keyCode==13) {
         window.location.hash = "#search/"+query;
-        $("#searchBox").val("");
     } else {
         if(query.length>2) {
             $.post('/backend/usersearch/',{"query":query},function(data) {
@@ -54,6 +53,8 @@ $("#searchBox").keyup(function(e) {
                 _.each(data,function(user,i) {
                     searchContent += _.template(template,user);
                 });
+                if(data.length==0)
+                    searchContent += "<li><a>No users found</a></li>"
                 searchContent += "<li class='divider'></li><li><a href='#search/"+query+"'>Search for '"+query+"'</a></li>";
                 $("#searchList").html(searchContent);
             }, "json");
@@ -93,6 +94,7 @@ setInterval(refreshFeed, 4000);
 // functions
 
 function router() {
+    closeSearchPopup();
     var hash = window.location.hash.substr(1);
     var broken = hash.split("/");
     if(broken[0]=="profile") {
@@ -121,6 +123,12 @@ function router() {
         showTab('feed');
         updateFeed();
     }
+}
+function closeSearchPopup() {
+    $("#menu-search").removeClass("open");
+    $("#searchBox").blur();
+    $("#searchBox").val("");
+    $("#searchList").html("<li><a>Start typing to search users</a></li>")
 }
 function popup(list,template) {
     $("#popupClose").href=window.url;
@@ -355,9 +363,6 @@ function search(text) {
     $.post('/backend/search/',{ query: text },function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        _.each(data['users'], function(user) {
-            user['followerslist'] = JSON.parse(user['followerslist']);
-        });
         _.each(data['tweets'], function(tweet) {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
         });
