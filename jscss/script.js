@@ -45,6 +45,7 @@ $("#searchBox").keyup(function(e) {
     var query = $("#searchBox").val();
     var searchContent = "";
     if(e.keyCode==13) {
+        displayedSearch = "";
         window.location.hash = "#search/"+query;
     } else {
         if(query.length>2) {
@@ -195,7 +196,7 @@ function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 function updateMiniProfile(profile) {
-    $("#miniProfilePic").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=");
+    $("#miniProfilePic").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(profile['emailid'])+"?s=");
     $("#miniProfileName").html(profile['username']);
     $("#miniProfileId").html(profile['userid']);
     $("#miniProfileTweets").html(profile['postcount']);
@@ -296,7 +297,7 @@ function getProfile(userid,callback) {
         hideTicker();
     }, "json");
 }
-function gravatarhash(emailid) {
+function gravatarhashfunction(emailid) {
     return $.md5(trim(emailid).toLowerCase());
 }
 function showProfile(profile) {
@@ -306,7 +307,7 @@ function showProfile(profile) {
         profileUserId = userid;
     }
     displayedProfile = profile;
-    $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhash(profile['emailid'])+"?s=100")
+    $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(profile['emailid'])+"?s=100")
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
     $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets");
@@ -338,9 +339,9 @@ function populateListByPrepend(container,list,template,prefix,idcol) {
     _.each(list,function(item,id) {
         item['id'] = prefix+item[idcol];
         if(item['sourceuser'])
-            item['gravatarhash'] = gravatarhash(item['sourceuser']['emailid']);
+            item['gravatarhash'] = gravatarhashfunction(item['sourceuser']['emailid']);
         else
-            item['gravatarhash'] = gravatarhash(item['emailid']);
+            item['gravatarhash'] = gravatarhashfunction(item['emailid']);
         if(!document.getElementById(item['id']))
             container.prepend(_.template(template,item));
     });
@@ -350,9 +351,9 @@ function populateListByAppend(container,list,template,prefix,idcol) {
     _.each(list,function(item,id) {
         item['id'] = prefix+item[idcol];
         if(item['sourceuser'])
-            item['gravatarhash'] = gravatarhash(item['sourceuser']['emailid']);
+            item['gravatarhash'] = gravatarhashfunction(item['sourceuser']['emailid']);
         else
-            item['gravatarhash'] = gravatarhash(item['emailid']);
+            item['gravatarhash'] = gravatarhashfunction(item['emailid']);
         if(!document.getElementById(item['id']))
             container.append(_.template(template,item));
     });
@@ -397,6 +398,22 @@ function showMoreFollowing() {
 function showMoreFollowers() {
     var length = $("#followersContainer").children().length;
     populateListByAppend($("#followersContainer"),displayedProfile['followerslist'].slice(length,length+10),$("#tmpl-user").html(),"follower-","userid");
+}
+function updateSearchUser(url) {
+    showTicker("(Un)Following user");
+    $.get('/backend/'+url,{},function(data) {
+        myProfile = processProfile(data['myProfile']);
+        var newuserdata = processProfile(data['currentProfile']);
+        if(displayedProfile['userid']==newuserdata['userid']) {
+            displayedProfile = newuserdata;
+            showProfile(displayedProfile);
+        }
+        newuserdata['id'] = "search-user-"+newuserdata['userid'];
+        newuserdata['gravatarhash'] = gravatarhashfunction(newuserdata['emailid']);
+        $("#search-user-"+newuserdata['userid']).replaceWith(_.template($("#tmpl-user").html(),newuserdata));
+        $("#searchUserContainer :hidden").show();
+        hideTicker();
+    }, "json");
 }
 
 // Data
