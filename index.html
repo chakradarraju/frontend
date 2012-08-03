@@ -2,6 +2,7 @@
 <head>
 <title>Twitter App</title>
 <link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+<link type="text/css" rel="stylesheet" href="jqueryui/css/flick/jquery-ui-1.8.22.custom.css" />
 <link type="text/css" rel="stylesheet" href="jscss/style.css" />
 </head>
 <body>
@@ -11,9 +12,14 @@
 <ul id="navbar" class="nav">
 <li id="menu-feed" class="menuitem active"><a href="#feed">Feeds</a></li>
 <li id="menu-profile" class="menuitem"><a href="#profile">Profile</a></li>
+<li id="menu-search" class="dropdown">
+    <input type="text" id="searchBox" class="search-query" placeholder="Search..." />
+    <ul class="dropdown-menu" id="searchList">
+        <li><a href="#search/hello">Search</a></li>
+    </ul>
+</li>
 </ul>
 <button id="logoutButton" class="btn btn-danger"><i class="icon-off icon-white"></i> Logout</button>
-<input type="text" id="searchBox" class="search-query" placeholder="Search..." />
 </div>
 </div>
 </div>
@@ -130,6 +136,7 @@
 <div id="ticker"></div>
 
 <script src="jscss/jquery.js"></script>
+<script src="jqueryui/js/jquery-ui-1.8.22.custom.min.js"></script>
 <script src="jscss/underscore.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
@@ -155,6 +162,11 @@
         </span>
         <% } %>
     </div>
+</script>
+<script type="text/html" id="tmpl-user-search-popup">
+    <li>
+        <a href="#profile/<%=userid%>"><%=username%></a>
+    </li>
 </script>
 </body>
 </html>

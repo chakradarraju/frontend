@@ -39,12 +39,27 @@ $("#postBtn").click(function() {
         updateFeed();
     });
 });
+$("#searchBox").dropdown();
 $("#tweetBox").keypress(resizeIt);
-$("#searchBox").keypress(function(e) {
+$("#searchBox").keyup(function(e) {
+    var query = $("#searchBox").val();
+    var searchContent = "";
     if(e.keyCode==13) {
-        var query = $("#searchBox").val();
         window.location.hash = "#search/"+query;
         $("#searchBox").val("");
+    } else {
+        if(query.length>2) {
+            $.post('/backend/usersearch/',{"query":query},function(data) {
+                var template = $("#tmpl-user-search-popup").html();
+                _.each(data,function(user,i) {
+                    searchContent += _.template(template,user);
+                });
+                searchContent += "<li class='divider'></li><li><a href='#search/"+query+"'>Search for '"+query+"'</a></li>";
+                $("#searchList").html(searchContent);
+            }, "json");
+        } else {
+            $("#searchList").html("<li><a href='#search/"+query+"'>Search for '"+query+"'</a></li>")
+        }
     }
 });
 $("#followButton").click(function() {
