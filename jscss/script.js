@@ -84,6 +84,17 @@ $("#unfollowButton").click(function() {
         alert(data['message']);
     }, "json");
 });
+$("#editProfileSave").click(function() {
+    if(!validateEditProfile())
+        return false;
+    $.post('/backend/editprofile/',{
+        "username": $("#editProfileUsername").val(),
+        "emailid": $("#editProfileEmail").val(),
+        "password": $("#editProfilePassword").val()
+    }, function(data) {
+        alert(data['message']);
+    }, "json");
+});
 $(document).keyup(function(e) {
     if(e.which == 27)
         closepopup(e);
@@ -108,6 +119,9 @@ function router() {
             $("#container").animate({marginLeft:-860});
         else
             $("#container").animate({marginLeft:0});
+    } else if(broken[0]=="editProfile") {
+        showTab('editprofile');
+        showEditProfile();
     } else if(broken[0]=="search") {
         showTab('search');
         if(broken.length>1&&displayedSearch!=broken[1]) {
@@ -331,7 +345,8 @@ function showProfile(profile) {
     refreshTimes();
     $("#followButton").hide();
     $("#unfollowButton").hide();
-    if(profile['userid']==myProfile['userid']) {}
+    $("#editProfileButton").hide();
+    if(profile['userid']==myProfile['userid']) $("#editProfileButton").show();
     else if(following(profile['userid'])) $("#unfollowButton").show();
     else $("#followButton").show();
 }
@@ -414,6 +429,22 @@ function updateSearchUser(url) {
         $("#searchUserContainer :hidden").show();
         hideTicker();
     }, "json");
+}
+function showEditProfile() {
+    if(myProfile!=null) {
+        $("#editProfileUsername").val(myProfile['username']);
+        $("#editProfileEmail").val(myProfile['emailid']);
+        $("#editProfileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(myProfile['emailid']));
+    }
+}
+function validateEditProfile() {
+    if($("#editProfilePassword").val()!=$("#editProfileConfirmPassword").val()) {
+        alert("Passwords don't match");
+        $("#editProfilePassword").val("");
+        $("#editProfileConfirmPassword").val("");
+        return false;
+    }
+    return true;
 }
 
 // Data

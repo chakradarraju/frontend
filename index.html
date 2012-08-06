@@ -68,8 +68,9 @@
         <div id="content-profile">
             <div class="brick">
                 <img id="profileImage" src="" class="gravatar"/>
-                <button class="btn btn-primary btn-large" id="followButton" style="float:right;display:none;">Follow</button>
-                <button class="btn btn-large" id="unfollowButton" style="float:right;display:none;">UnFollow</button>
+                <button class="btn btn-primary btn-large" id="followButton" style="float:right;">Follow</button>
+                <button class="btn btn-large" id="unfollowButton" style="float:right;">UnFollow</button>
+                <button class="btn btn-primary btn-large" id="editProfileButton" style="float:right;" onclick="window.location='#editProfile'">Edit Profile</button>
                 <h2><span id="profileUsername"></span></h2>
                 EmailId: <span id="profileEmailId"></span><br/>
                 <a id="profileTweetsLink" href="#"><span id="profileTweets"></span> Tweets</a><br/>
@@ -101,6 +102,20 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- edit profile -->
+    <div id="tab-editprofile" class="sector">
+        <div id="content-editprofile">
+            <div class="brick form-inline">
+                <a href="http://www.gravatar.com/"><img id="editProfileImage" src="" class="gravatar"/></a>
+                <label for="editProfileUsername">Username: </label><input type="text" id="editProfileUsername" /><br/>
+                <label for="editProfileEmail">Email: </label><input type="text" id="editProfileEmail" /><br/>
+                <label for="editProfilePassword">Password: </label><input type="password" id="editProfilePassword" /><br/>
+                <label for="editProfileConfirmPassword">Confirm Password: </label><input type="password" id="editProfileConfirmPassword" /><br/>
+                <button class="btn btn-primary" id="editProfileSave">Save</button>
             </div>
         </div>
     </div>
