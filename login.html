@@ -25,6 +25,7 @@
             <label for="registerUserid">User Id:</label><input type="text" id="registerUserid" placeholder="User Id..." /><br/>
             <label for="registerEmailid">Email Id:</label><input type="text" id="registerEmailid" placeholder="Email..." /><br/>
             <label for="registerPassword">Password:</label><input type="password" id="registerPassword" placeholder="Password..." /><br/>
+            <label for="registerConfirmPassword">Confirm Password:</label><input type="password" id="registerConfirmPassword" placeholder="Password..." /><br/>
             <button id="registerButton" class="btn btn-success">Register</button>
         </div>
         <div class="clearer"></div>
@@ -32,11 +33,12 @@
 </div>
 <script src="jscss/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
+<script src="jscss/md5.js"></script>
 <script>
     $("#loginButton").click(function() {
         $.post("/backend/login/", {
             'emailid': $("#loginEmailid").val(),
-            'password': $("#loginPassword").val()
+            'password':$.md5($("#loginPassword").val())
         }, function(data) {
             if(data['message']=="Login success")
                 window.location = "/frontend/";
@@ -45,11 +47,17 @@
         }, "json");
     });
     $("#registerButton").click(function() {
+        if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
+            alert("Passwords dont match");
+            $("#registerConfirmPassword").val("");
+            $("#registerPassword").val("").focus();
+            return false;
+        }
         $.post("/backend/register/", {
             'emailid': $("#registerEmailid").val(),
             'username': $("#registerUsername").val(),
             'userid': $("#registerUserid").val(),
-            'password': $("#registerPassword").val()
+            'password':$.md5($("#registerPassword").val())
         }, function(data) {
             alert(data['message']);
         }, "json");
