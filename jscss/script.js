@@ -86,14 +86,18 @@ $("#unfollowButton").click(function() {
 });
 $("#editProfileSave").click(function() {
     if(!validateEditProfile())
-        return false;
+        return true;
     $.post('/backend/editprofile/',{
         "username": $("#editProfileUsername").val(),
         "emailid": $("#editProfileEmail").val(),
-        "password": $("#editProfilePassword").val()
+        "password":$.md5($("#editProfilePassword").val())
     }, function(data) {
         alert(data['message']);
     }, "json");
+});
+$("#editProfileBackground").change(function() {
+    $("body").css("background","url('"+$(this).val()+"')");
+    $.cookie("background",$(this).val());
 });
 $(document).keyup(function(e) {
     if(e.which == 27)
@@ -138,6 +142,17 @@ function router() {
         showTab('feed');
         updateFeed();
     }
+}
+function setup() {
+    var background = $.cookie("background");
+    if(background!=null) {
+        $("body").css("background","url('"+background+"')");
+    } else {
+        background = $("body").css("background-image");
+        background = background.substr(4,background.length-5);
+        $.cookie("background",background);
+    }
+    $("#editProfileBackground").val(background);
 }
 function closeSearchPopup() {
     $("#menu-search").removeClass("open");
@@ -440,7 +455,7 @@ function showEditProfile() {
 function validateEditProfile() {
     if($("#editProfilePassword").val()!=$("#editProfileConfirmPassword").val()) {
         alert("Passwords don't match");
-        $("#editProfilePassword").val("");
+        $("#editProfilePassword").val("").focus();
         $("#editProfileConfirmPassword").val("");
         return false;
     }
@@ -474,3 +489,4 @@ function following(userid) {
 // Bootup code
 
 router();
+setup();

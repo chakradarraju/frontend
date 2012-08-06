@@ -115,6 +115,15 @@
                 <label for="editProfileEmail">Email: </label><input type="text" id="editProfileEmail" /><br/>
                 <label for="editProfilePassword">Password: </label><input type="password" id="editProfilePassword" /><br/>
                 <label for="editProfileConfirmPassword">Confirm Password: </label><input type="password" id="editProfileConfirmPassword" /><br/>
+                <lable for="editProfileBackground">Background:</lable>
+                <select id="editProfileBackground">
+                    <option value="img/pattern1.gif">Chakras</option>
+                    <option value="img/pattern2.png">ABC</option>
+                    <option value="img/pattern3.jpg">Mesh</option>
+                    <option value="img/pattern4.jpg">Curls</option>
+                    <option value="img/pattern5.jpg">Blue cells</option>
+                    <option value="img/pattern6.gif">Flowers 1</option>
+                </select>
                 <button class="btn btn-primary" id="editProfileSave">Save</button>
             </div>
         </div>
@@ -153,6 +162,7 @@
 <script src="jscss/underscore.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
+<script src="jscss/jquery.cookie.js"></script>
 <script type="text/html" id="tmpl-tweet">
     <div class="tweet listing" id="<%=id%>" style="display:none">
         <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
