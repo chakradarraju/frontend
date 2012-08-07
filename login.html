@@ -6,12 +6,17 @@
 <style type="text/css">
     #content-wrapper {
         position: relative;
-        width: 500px;
-        margin: 0px auto;
+        width: 900px;
+        left: 50%;
+        top: 50%;
+        margin-left: -450px;
+        margin-top: -200px;
+        padding: 0px;
+        height: 400px;
         text-align: left;
     }
     .formContainer {
-        width: 460px;
+        width: 260px;
         float: left;
     }
     input[type=text], input[type=password] {
@@ -22,29 +27,60 @@
         width: 140px;
         text-align: right;
     }
+    body {
+        background: url('img/people.jpg');
+    }
+    #banner {
+        float: left;
+        width: 600px;
+        height: 400px;
+        margin: 0px;
+    }
+    #loginPanel {
+        float: left;
+        width: 260px;
+        height: 360px;
+        margin: 0px;
+    }
+    #bannerText {
+        float: left;
+        color: white;
+        position: absolute;
+        left: 300px;
+        top: 330px;
+        font-family: serif;
+        font-size: 28px;
+    }
 </style>
 </head>
 <body>
 <div id="content-wrapper">
-    <div class="well form-inline">
-        <center><h2>Mini Twitter</h2></center>
+    <div id="banner">
+        <img src="img/connect.jpg" alt="" style="display: inline;">
+        <span id="bannerText">
+            Connect with people...<br/>
+            Finds whats new
+        </span>
+    </div>
+    <div class="well form-inline" id="loginPanel">
+        <center><img src="img/mini.png" /></center>
         <div style="margin: 20px; overflow: hidden;">
-            <div id="slideFrame" style="width: 920px;">
-                <div id="loginDiv" class="formContainer" style="margin-top:50px;">
-                    <label for="loginEmailid">Email or userId:</label><input type="text" id="loginEmailid" placeholder="Email..." /><br/>
-                    <label for="loginPassword">Password:</label><input type="password" id="loginPassword" placeholder="Password..." /><br/>
-                    <div style="margin-top:10px;margin-left:100px;">
+            <div id="slideFrame" style="width: 520px;">
+                <div id="loginDiv" class="formContainer" style="margin-top:70px;">
+                    <input type="text" id="loginEmailid" placeholder="Email..." /><br/>
+                    <input type="password" id="loginPassword" placeholder="Password..." /><br/>
+                    <div style="margin-top:10px;margin-left:20px;">
                         <button id="loginButton" class="btn btn-primary">Login</button>
                         <button id="loginRegisterButton" class="btn">Register &gt;&gt;</button>
                     </div>
                 </div>
-                <div id="registerDiv" class="formContainer">
-                    <label for="registerUsername">Username:</label><input type="text" id="registerUsername" placeholder="Username..." /><br/>
-                    <label for="registerUserid">User Id:</label><input type="text" id="registerUserid" placeholder="User Id..." /><br/>
-                    <label for="registerEmailid">Email Id:</label><input type="text" id="registerEmailid" placeholder="Email..." /><br/>
-                    <label for="registerPassword">Password:</label><input type="password" id="registerPassword" placeholder="Password..." /><br/>
-                    <label for="registerConfirmPassword">Confirm Password:</label><input type="password" id="registerConfirmPassword" placeholder="Password..." /><br/>
-                    <div style="margin-top:15px;margin-left:100px;">
+                <div id="registerDiv" class="formContainer" style="margin-top: 20px;">
+                    <input type="text" id="registerUsername" placeholder="Display Name..." /><br/>
+                    <input type="text" id="registerUserid" placeholder="Username..." /><br/>
+                    <input type="text" id="registerEmailid" placeholder="Email..." /><br/>
+                    <input type="password" id="registerPassword" placeholder="Password..." /><br/>
+                    <input type="password" id="registerConfirmPassword" placeholder="Confirm Password..." /><br/>
+                    <div style="margin-top:15px;margin-left:20px;">
                         <button id="registerLoginButton" class="btn">&lt;&lt; Login</button>
                         <button id="registerButton" class="btn btn-success">Register</button>
                     </div>
@@ -59,7 +95,7 @@
 <script src="jscss/md5.js"></script>
 <script>
     $("#loginRegisterButton").click(function() {
-        $("#slideFrame").animate({marginLeft:-460});
+        $("#slideFrame").animate({marginLeft:-260});
     })
     $("#registerLoginButton").click(function() {
         $("#slideFrame").animate({marginLeft:0});
