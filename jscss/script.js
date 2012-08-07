@@ -204,10 +204,6 @@ function resizeIt() {
     if(!str) str = "";
     $('#tweetBox').attr('rows',str.split("\n").length+1);
 }
-function something(a) {
-    alert(a);
-    return timeDiff(new Date()-new Date(a.attr('href')));
-}
 function round5(x) {
     var ret = parseInt((x+5)/5)*5;
     return ret;
@@ -242,6 +238,8 @@ function updateFeed() {
         ticker = true;
     if(ticker)
         showTicker("Updating Feed...");
+    if(myProfile==null)
+        updateMyProfile();
     var url = '/backend/feed/';
     var obj = {};
     if(latestFeedId != null) {
@@ -364,8 +362,8 @@ function showProfile(profile) {
     $("#followButton").hide();
     $("#unfollowButton").hide();
     $("#editProfileButton").hide();
-    if(profile['userid']==myProfile['userid']) $("#editProfileButton").show();
-    else if(following(profile['userid'])) $("#unfollowButton").show();
+    if(following(profile['userid'])) $("#unfollowButton").show();
+    else if(myProfile!=null&&profile['userid']==myProfile['userid']) $("#editProfileButton").show();
     else $("#followButton").show();
 }
 function populateListByPrepend(container,list,template,prefix,idcol) {
@@ -464,6 +462,14 @@ function validateEditProfile() {
     }
     return true;
 }
+function updateMyProfile() {
+    $.get('/backend/myprofile/',{},function(data) {
+        if(data['display']=="login")
+            window.location = "/frontend/login.html";
+        myProfile = processProfile(data);
+        updateMiniProfile(myProfile);
+    }, "json");
+}
 
 // Data
 
@@ -474,15 +480,11 @@ var profileUserId = null;
 var myProfile = null;
 var displayedProfile = null;
 var displayedSearch = null;
-
-$.get('/backend/myprofile/',{},function(data) {
-    if(data['display']=="login")
-        window.location = "/frontend/login.html";
-    myProfile = processProfile(data);
-    updateMiniProfile(myProfile);
-}, "json");
-
 function following(userid) {
+    console.log('before');
+    if(myProfile==null)
+        return false;
+    console.log("something");
     for(i in myProfile['followinglist']) {
         if(myProfile['followinglist'][i]['userid']==userid)
             return true;
