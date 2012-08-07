@@ -153,6 +153,7 @@ function setup() {
         $.cookie("background",background);
     }
     $("#editProfileBackground").val(background);
+    $("#tweetBox").focus();
 }
 function closeSearchPopup() {
     $("#menu-search").removeClass("open");
@@ -279,6 +280,7 @@ function loadOlderFeed() {
         _.each(data['tweets'], function(tweet,tweetid) {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
+            tweet['gravatarhash'] = gravatarhashfunction(tweet['sourceuser']['emailid']);
             tweet['id'] = "feed-"+tweet['feedid'];
             $("#feedContainer").append(_.template($("#tmpl-tweet").html(),tweet));
         });
@@ -299,6 +301,7 @@ function loadOlderTweet() {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
             tweet['id'] = "feed-"+tweet['feedid'];
+            tweet['gravatarhash'] = gravatarhashfunction(tweet['sourceuser']['emailid']);
             $("#tweetContainer").append(_.template($("#tmpl-tweet").html(),tweet));
         });
         $("#tweetContainer :hidden").slideDown();
@@ -471,6 +474,7 @@ var profileUserId = null;
 var myProfile = null;
 var displayedProfile = null;
 var displayedSearch = null;
+
 $.get('/backend/myprofile/',{},function(data) {
     if(data['display']=="login")
         window.location = "/frontend/login.html";
