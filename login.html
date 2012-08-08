@@ -111,16 +111,31 @@
 			window.location = "/frontend/";
                  }
 	    else
-	$('#loginDiv').append('<br /><span class="message-text">Wrong Username/Email and password combination.</span>');
+	$('#loginDiv').append('<br /><span>Wrong Username/Email and password combination.</span>');
         }, "json");
     });
     $("#registerButton").click(function() {
+	if($("#registerUsername").val()==""){
+		if($('#EntryMissing').length)
+			$('#EntryMissing').remove();
+		$('#registerDiv').append('<div id="EntryMissing"><span> <br />Enter Username.</span></div>');		
+            	$("#registerUsername").val("").focus();
+		return false;
+	}
         if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
-	$('#registerDiv').append('<br /><span class="message-text">Passwords do not match.</span>');
+	    if($('#EntryMissing').length)
+		$('#EntryMissing').remove();
+	    $('#registerDiv').append('<div id="EntryMissing"><span><br />Passwords do not match.</span></div>');
             $("#registerConfirmPassword").val("");
             $("#registerPassword").val("").focus();
             return false;
         }
+	if($("#registerPassword").val().length<6){
+		if($('#EntryMissing').length)
+			$('#EntryMissing').remove();
+		$('#registerDiv').append('<div id="EntryMissing"><span><br />Enter Password of atleast 6 characters.</span></div>');		         	$("#registerPassword").val("").focus();
+		return false;
+	}
         $.post("/backend/register/", {
             'emailid': $("#registerEmailid").val(),
             'username': $("#registerUsername").val(),
@@ -128,7 +143,11 @@
             'password':$.md5($("#registerPassword").val())
         }, function(data) {
 		if(data['message']=="Invalid Email"){
-			$('#registerDiv').append('<br /><span class="message-text">Invalid Email.</span>');		
+			if($('#EntryMissing').length)
+				$('#EntryMissing').remove();
+			$('#registerDiv').append('<div id="EntryMissing"><span><br />Invalid Email.</span></div>');		
+            		$("#registerEmailid").val("").focus();
+			return false;
 		}
 		else{
 	        $.post("/backend/login/", {
