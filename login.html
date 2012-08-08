@@ -111,12 +111,12 @@
 			window.location = "/frontend/";
                  }
 	    else
-                alert(data['message']);
+	$('#loginDiv').append('<br /><span class="message-text">Wrong Username/Email and password combination.</span>');
         }, "json");
     });
     $("#registerButton").click(function() {
         if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
-            alert("Passwords dont match");
+	$('#registerDiv').append('<br /><span class="message-text">Passwords do not match.</span>');
             $("#registerConfirmPassword").val("");
             $("#registerPassword").val("").focus();
             return false;
