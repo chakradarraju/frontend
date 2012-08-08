@@ -124,7 +124,13 @@
             'userid': $("#registerUserid").val(),
             'password':$.md5($("#registerPassword").val())
         }, function(data) {
-	window.location = "/frontend/";
+	        $.post("/backend/login/", {
+        	    'emailid': $("#registerEmailid").val(),
+            	    'password':$.md5($("#registerPassword").val())
+        	}, function(data) {
+            		if(data['message']=="Login success")
+              		  window.location = "/frontend/";
+        		}, "json");
         }, "json");
     });
 </script>
