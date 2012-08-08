@@ -127,13 +127,17 @@
             'userid': $("#registerUserid").val(),
             'password':$.md5($("#registerPassword").val())
         }, function(data) {
+		if(data['message']=="Invalid Email"){
+			$('#registerDiv').append('<br /><span class="message-text">Invalid Email.</span>');		
+		}
+		else{
 	        $.post("/backend/login/", {
         	    'emailid': $("#registerEmailid").val(),
             	    'password':$.md5($("#registerPassword").val())
         	}, function(data) {
             		if(data['message']=="Login success")
               		  window.location = "/frontend/";
-        		}, "json");
+        		}, "json");}
         }, "json");
     });
 </script>
