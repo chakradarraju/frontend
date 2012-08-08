@@ -107,7 +107,10 @@
         }, function(data) {
             if(data['message']=="Login success")
                 window.location = "/frontend/";
-            else
+            else if(data['message']=="Already Looged In"){
+			window.location = "/frontend/";
+                 }
+	    else
                 alert(data['message']);
         }, "json");
     });
