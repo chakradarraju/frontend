@@ -1,4 +1,11 @@
 // Event Handlers
+$('#tweetBox').on("propertychange input textInput", function () {
+    var left = 140 - $(this).val().length;
+    if (left < 0) {
+        left = 0;
+    }
+    $('#counter').text('Characters left: ' + left);
+});
 
 $("#logoutButton").click(function() {
     $.post('/backend/logout/',{}, function(data) {
