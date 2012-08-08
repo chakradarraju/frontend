@@ -124,7 +124,7 @@
             'userid': $("#registerUserid").val(),
             'password':$.md5($("#registerPassword").val())
         }, function(data) {
-            alert(data['message']);
+                window.location = "/frontend/";
         }, "json");
     });
 </script>
