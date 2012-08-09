@@ -19,6 +19,7 @@
         width: 260px;
         float: left;
     }
+
     input[type=text], input[type=password] {
         height: 30px;
         margin: 5px;
@@ -33,7 +34,7 @@
     #banner {
         float: left;
         width: 600px;
-        height: 400px;
+        height: 500px;
         margin: 0px;
     }
     #loginPanel {
@@ -59,7 +60,7 @@
         <img src="img/connect.jpg" alt="" style="display: inline;">
         <span id="bannerText">
             Connect with people...<br/>
-            Finds whats new
+            Find whats new
         </span>
     </div>
     <div class="well form-inline" id="loginPanel">
@@ -71,8 +72,9 @@
                     <input type="password" id="loginPassword" placeholder="Password..." /><br/>
                     <div style="margin-top:10px;margin-left:20px;">
                         <button id="loginButton" class="btn btn-primary">Login</button>
-                        <button id="loginRegisterButton" class="btn">Register &gt;&gt;</button>
+                        <button id="loginRegisterButton" class="btn" >Register &gt;&gt;</button>
                     </div>
+	<!--	<div class="fb-login-button">Login with Facebook</div>-->
                 </div>
                 <div id="registerDiv" class="formContainer" style="margin-top: 20px;">
                     <input type="text" id="registerUsername" placeholder="Display Name..." /><br/>
@@ -80,6 +82,7 @@
                     <input type="text" id="registerEmailid" placeholder="Email..." /><br/>
                     <input type="password" id="registerPassword" placeholder="Password..." /><br/>
                     <input type="password" id="registerConfirmPassword" placeholder="Confirm Password..." /><br/>
+
                     <div style="margin-top:15px;margin-left:20px;">
                         <button id="registerLoginButton" class="btn">&lt;&lt; Login</button>
                         <button id="registerButton" class="btn btn-success">Register</button>
@@ -89,6 +92,7 @@
             </div>
         </div>
     </div>
+		    <div id="captchadiv" class="formContainer" style="margin-top: 20px;"> </div>	
 </div>
 <script src="jscss/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
@@ -96,6 +100,11 @@
 <script>
     $("#loginRegisterButton").click(function() {
         $("#slideFrame").animate({marginLeft:-260});
+            Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
+                tabindex: 1,
+                theme: "clean",
+                callback: Recaptcha.focus_response_field
+            });
     })
     $("#registerLoginButton").click(function() {
         $("#slideFrame").animate({marginLeft:0});
@@ -140,7 +149,9 @@
             'emailid': $("#registerEmailid").val(),
             'username': $("#registerUsername").val(),
             'userid': $("#registerUserid").val(),
-            'password':$.md5($("#registerPassword").val())
+            'password':$.md5($("#registerPassword").val()),
+	    'recaptcha_challenge_field':$("#recaptcha_challenge_field").val(),
+	    'recaptcha_response_field':$("#recaptcha_response_field").val()
         }, function(data) {
 		if(data['message']=="Invalid Email"){
 			if($('#EntryMissing').length)
@@ -159,6 +170,34 @@
         		}, "json");}
         }, "json");
     });
+/*
+window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '397331773664082', // App ID
+           // channelUrl : '//localhost/frontend/', // Channel File
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+          });
+     FB.Event.subscribe('auth.login', function(response) {
+         // do something with response
+         login();
+     });
+     FB.Event.subscribe('auth.logout', function(response) {
+         // do something with response
+         logout();
+     });
+        };
+        // Load the SDK Asynchronously
+        (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+         }(document));
+*/
 </script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script> 
 </body>
 </html>
