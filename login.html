@@ -74,7 +74,6 @@
                         <button id="loginButton" class="btn btn-primary">Login</button>
                         <button id="loginRegisterButton" class="btn" >Register &gt;&gt;</button>
                     </div>
-	<!--	<div class="fb-login-button">Login with Facebook</div>-->
                 </div>
                 <div id="registerDiv" class="formContainer" style="margin-top: 20px;">
                     <input type="text" id="registerUsername" placeholder="Display Name..." /><br/>
@@ -100,11 +99,7 @@
 <script>
     $("#loginRegisterButton").click(function() {
         $("#slideFrame").animate({marginLeft:-260});
-            Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
-                tabindex: 1,
-                theme: "clean",
-                callback: Recaptcha.focus_response_field
-            });
+	showRecaptcha();
     })
     $("#registerLoginButton").click(function() {
         $("#slideFrame").animate({marginLeft:0});
@@ -160,6 +155,14 @@
             		$("#registerEmailid").val("").focus();
 			return false;
 		}
+		else if(data['message']=="Captcha Wrongly Answered."){
+			if($('#EntryMissing').length)
+				$('#EntryMissing').remove();
+			$('#registerDiv').append('<div id="EntryMissing"><span><br />Captcha Wrongly Answered.</span></div>');		
+			showRecaptcha();
+            		$("#recaptcha_response_field").val("").focus();
+			return false;			
+		}
 		else{
 	        $.post("/backend/login/", {
         	    'emailid': $("#registerEmailid").val(),
@@ -170,33 +173,13 @@
         		}, "json");}
         }, "json");
     });
-/*
-window.fbAsyncInit = function() {
-          FB.init({
-            appId      : '397331773664082', // App ID
-           // channelUrl : '//localhost/frontend/', // Channel File
-            status     : true, // check login status
-            cookie     : true, // enable cookies to allow the server to access the session
-            xfbml      : true  // parse XFBML
-          });
-     FB.Event.subscribe('auth.login', function(response) {
-         // do something with response
-         login();
-     });
-     FB.Event.subscribe('auth.logout', function(response) {
-         // do something with response
-         logout();
-     });
-        };
-        // Load the SDK Asynchronously
-        (function(d){
-           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-           if (d.getElementById(id)) {return;}
-           js = d.createElement('script'); js.id = id; js.async = true;
-           js.src = "//connect.facebook.net/en_US/all.js";
-           ref.parentNode.insertBefore(js, ref);
-         }(document));
-*/
+	function showRecaptcha(){
+            Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
+                tabindex: 1,
+                theme: "clean",
+                callback: Recaptcha.focus_response_field
+            });
+	}
 </script>
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script> 
 </body>
