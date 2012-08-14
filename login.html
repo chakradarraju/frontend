@@ -52,6 +52,31 @@
         font-family: serif;
         font-size: 28px;
     }
+    #popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -40px;
+        margin-left: -200px;
+        height: 80px;
+        width: 400px;
+        display: none;
+        border: 10px solid rgba(82, 82, 82, 0.7);
+        border-radius: 8px;
+    }
+    #popupInner {
+        background: white;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        text-align: center;
+    }
+    #popupContainer {
+        margin: 10px;
+        text-align: left;
+    }
 </style>
 </head>
 <body>
@@ -93,6 +118,14 @@
     </div>
 		    <!--class="formContainer" style="margin-top: 20px;"> </div>	-->
 </div>
+<div id="popup">
+    <div id="popupInner">
+        <div id="popupContainer"></div>
+        <button class="btn btn-primary" onclick="closealert(this)">Ok</button>
+    </div>
+    <div id="closeButtonPop">
+    </div>
+</div>
 <script src="jscss/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
@@ -127,69 +160,78 @@
 			window.location = "/frontend/";
                  }
 	    else
-	$('#loginDiv').append('<br /><span>Wrong Username/Email and password combination.</span>');
+            myalert("Wrong Username/Email and password combination");
         }, "json");
     });
     $("#registerButton").click(function() {
-	if($("#registerUsername").val()==""){
-		if($('#EntryMissing').length)
-			$('#EntryMissing').remove();
-		$('#registerDiv').append('<div id="EntryMissing"><span> <br />Enter Username.</span></div>');		
-            	$("#registerUsername").val("").focus();
-		return false;
-	}
+        if($("#registerUsername").val()==""){
+            myalert("Enter Username");
+            $("#registerUsername").val("").focus();
+            return false;
+        }
         if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
-	    if($('#EntryMissing').length)
-		$('#EntryMissing').remove();
-	    $('#registerDiv').append('<div id="EntryMissing"><span><br />Passwords do not match.</span></div>');
+            myalert("Passwords do not match");
             $("#registerConfirmPassword").val("");
             $("#registerPassword").val("").focus();
             return false;
         }
-	if($("#registerPassword").val().length<6){
-		if($('#EntryMissing').length)
-			$('#EntryMissing').remove();
-		$('#registerDiv').append('<div id="EntryMissing"><span><br />Enter Password of atleast 6 characters.</span></div>');		         	$("#registerPassword").val("").focus();
-		return false;
-	}
+        if($("#registerPassword").val().length<6){
+            myalert("Passwords should not be less than 6 characters");
+            $("#registerConfirmPassword").val("");
+            $("#registerPassword").val("").focus();
+            return false;
+        }
+        var emailMatch = $("#registerEmailid").val().match("^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$");
+        console.log(emailMatch);
+        if(emailMatch==null) {
+            myalert("Invalid Email id client");
+            $("#registerEmailid").val("").focus();
+            return false;
+        }
         $.post("/backend/register/", {
             'emailid': $("#registerEmailid").val(),
             'username': $("#registerUsername").val(),
             'userid': $("#registerUserid").val(),
             'password':$.md5($("#registerPassword").val()),
-	    'recaptcha_challenge_field':$("#recaptcha_challenge_field").val(),
-	    'recaptcha_response_field':$("#recaptcha_response_field").val()
+    	    'recaptcha_challenge_field':$("#recaptcha_challenge_field").val(),
+	        'recaptcha_response_field':$("#recaptcha_response_field").val()
         }, function(data) {
-		if(data['message']=="Invalid Email"){
-			if($('#EntryMissing').length)
-				$('#EntryMissing').remove();
-			$('#registerDiv').append('<div id="EntryMissing"><span><br />Invalid Email.</span></div>');		
-            		$("#registerEmailid").val("").focus();
-			return false;
-		}
-		else if(data['message']=="Captcha Wrongly Answered."){
-			if($('#EntryMissing').length)
-				$('#EntryMissing').remove();
-			$('#registerDiv').append('<div id="EntryMissing"><span><br />Captcha Wrongly Answered.</span></div>');		
-			showRecaptcha();
-            		$("#recaptcha_response_field").val("").focus();
-			return false;			
-		}
-		else{
-	        $.post("/backend/login/", {
-        	    'emailid': $("#registerEmailid").val(),
-            	    'password':$.md5($("#registerPassword").val())
-        	}, function(data) {
-            		if(data['message']=="Login success")
-              		  window.location = "/frontend/";
-        		}, "json");}
-        }, "json");
+            if(data['message']=="Invalid Email"){
+                myalert("Invalid Email");
+                $("#registerEmailid").val("").focus();
+                return false;
+            }
+            else if(data['message']=="Captcha Wrongly Answered."){
+                myalert("Captcha Wrongly answered");
+                showRecaptcha();
+                $("#recaptcha_response_field").val("").focus();
+                return false;
+            } else if(data['message']=="Registration success") {
+                window.location = '/frontend/';
+            } else {
+                myalert(data['message']);
+            }
+        });
     });
 	function showRecaptcha(){
-            Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
-                theme: "clean"
-            });
+        Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
+            theme: "clean"
+        });
 	}
+    function myalert(message) {
+        $("#popupContainer").html(message);
+        $("#popup").fadeIn();
+        $("#popup").focus();
+    }
+    function closealert(e) {
+        if($("#popup").css("display")!="none") {
+            $("#popup").fadeOut();
+        }
+    }
+    $(document).keyup(function(e) {
+        if(e.which == 27)
+            closealert(e);
+    });
     showRecaptcha();
 </script>
 </body>
