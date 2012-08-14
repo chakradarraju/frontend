@@ -51,6 +51,8 @@ $("#postBtn").click(function() {
             $("#tweetBox").fadeIn();
         });
         updateFeed();
+        myProfile['postcount']++;
+        updateMiniProfile(myProfile);
     });
 });
 $("#searchBox").dropdown();
@@ -82,7 +84,7 @@ $("#followButton").click(function() {
     $.get('/backend/follow/'+profileUserId,{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        myProfile = processProfile(data['myProfile']);
+        setMyProfile(processProfile(data['myProfile']));
         displayedProfile = processProfile(data['currentProfile']);
         showProfile(displayedProfile);
         myalert(data['message']);
@@ -92,7 +94,7 @@ $("#unfollowButton").click(function() {
     $.get('/backend/unfollow/'+profileUserId,{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        myProfile = processProfile(data['myProfile']);
+        setMyProfile(processProfile(data['myProfile']));
         displayedProfile = processProfile(data['currentProfile']);
         showProfile(displayedProfile);
         myalert(data['message']);
@@ -336,7 +338,7 @@ function getProfile(userid,callback) {
             return;
         }
         data = processProfile(data);
-        if(userid==null) myProfile = data;
+        if(userid==null) setMyProfile(data);
         callback(data);
         hideTicker();
     }, "json");
@@ -491,7 +493,7 @@ function showMoreFollowers() {
 function updateSearchUser(url) {
     showTicker("(Un)Following user");
     $.get('/backend/'+url,{},function(data) {
-        myProfile = processProfile(data['myProfile']);
+        setMyProfile(processProfile(data['myProfile']));
         var newuserdata = processProfile(data['currentProfile']);
         if(displayedProfile['userid']==newuserdata['userid']) {
             displayedProfile = newuserdata;
@@ -524,9 +526,12 @@ function updateMyProfile() {
     $.get('/backend/myprofile/',{},function(data) {
         if(data['display']=="login")
             window.location = "/frontend/login.html";
-        myProfile = processProfile(data);
-        updateMiniProfile(myProfile);
+        setMyProfile(processProfile(data));
     }, "json");
+}
+function setMyProfile(profile) {
+    myProfile = profile;
+    updateMiniProfile(profile);
 }
 
 // Data
