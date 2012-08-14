@@ -68,19 +68,19 @@
         <div style="margin: 20px; overflow: hidden;">
             <div id="slideFrame" style="width: 670px;">
                 <div id="loginDiv" class="formContainer" style="margin-top:120px;">
-                    <input type="text" id="loginEmailid" placeholder="Email..." /><br/>
-                    <input type="password" id="loginPassword" placeholder="Password..." /><br/>
+                    <input type="text" id="loginEmailid" class="loginField" placeholder="Email..." /><br/>
+                    <input type="password" id="loginPassword" class="loginField" placeholder="Password..." /><br/>
                     <div style="margin-top:10px;margin-left:20px;">
                         <button id="loginButton" class="btn btn-primary">Login</button>
                         <button id="loginRegisterButton" class="btn" >Register &gt;&gt;</button>
                     </div>
                 </div>
                 <div id="registerDiv" class="formContainer" style="margin-top: 20px;">
-                    <input type="text" id="registerUsername" placeholder="Display Name..." /><br/>
-                    <input type="text" id="registerUserid" placeholder="Username..." /><br/>
-                    <input type="text" id="registerEmailid" placeholder="Email..." /><br/>
-                    <input type="password" id="registerPassword" placeholder="Password..." /><br/>
-                    <input type="password" id="registerConfirmPassword" placeholder="Confirm Password..." /><br/>
+                    <input type="text" id="registerUsername" class="registerField" placeholder="Display Name..." /><br/>
+                    <input type="text" id="registerUserid" class="registerField" placeholder="Username..." /><br/>
+                    <input type="text" id="registerEmailid" class="registerField" placeholder="Email..." /><br/>
+                    <input type="password" id="registerPassword" class="registerField" placeholder="Password..." /><br/>
+                    <input type="password" id="registerConfirmPassword" class="registerField" placeholder="Confirm Password..." /><br/>
                     <div id="captchadiv" style="width: 260px; height: 123px;" ></div>
                     <div style="margin-top:15px;margin-left:20px;">
                         <button id="registerLoginButton" class="btn">&lt;&lt; Login</button>
@@ -107,6 +107,14 @@
         $("#slideFrame").animate({marginLeft:0});
         $("#banner").animate({width:600});
         $("#loginPanel").animate({width:260});
+    });
+    $(".loginField").keypress(function(e) {
+        if(e.keyCode==13)
+            $("#loginButton").click();
+    });
+    $(".registerField").keypress(function(e) {
+        if(e.keyCode==13)
+            $("#registerButton").click();
     });
     $("#loginButton").click(function() {
         $.post("/backend/login/", {
