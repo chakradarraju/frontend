@@ -258,6 +258,7 @@ function updateFeed() {
             window.location = "/frontend/login.html";
         if(data['tweets'].length>0)
             latestFeedId = data['tweets'][0]['feedid'];
+        data['tweets'] = processTweets(data['tweets']);
         data['tweets'] = data['tweets'].reverse();
         if(data['tweets'].length>0&&(oldestFeedId==null||oldestFeedId>parseInt(data['tweets'][0]['feedid'])))
             oldestFeedId = parseInt(data['tweets'][0]['feedid']);
@@ -328,6 +329,10 @@ function getProfile(userid,callback) {
     if(userid==null) url = '/backend/myprofile/';
     else url = '/backend/profile/'+userid;
     $.get(url,{},function(data) {
+        if(data['message']=="Userid does not exist") {
+            alert("User not found");
+            window.location = "#feeds";
+        }
         data = processProfile(data);
         if(userid==null) myProfile = data;
         callback(data);
@@ -336,6 +341,45 @@ function getProfile(userid,callback) {
 }
 function gravatarhashfunction(emailid) {
     return $.md5(trim(emailid).toLowerCase());
+}
+function processTweets(tweets) {
+    _.each(tweets,function(tweet,i) {
+        tweets[i] = processTweet(tweet);
+    });
+    return tweets;
+}
+function isAlphaNum(character) {
+    if(character>='a'&&character<='z')
+        return true;
+    if(character>='A'&&character<='Z')
+        return true;
+    if(character>='0'&&character<='9')
+        return true;
+    return false;
+}
+function processTweet(tweet) {
+    var text = tweet['postcontent'], result = "";
+    var len = text.length;
+    var mention = false;
+    for(var i=0;i<len;i++) {
+        if(mention&&!isAlphaNum(text[i])) {
+            result += "</a>";
+            mention = false;
+        }
+        if(text[i]=='@') {
+            mention = true;
+            result += "<a onclick='taketoprofile(this)'>";
+        } else {
+            result += text[i];
+        }
+    }
+    if(mention)
+        result += "</a>";
+    tweet['postcontent'] = result;
+    return tweet;
+}
+function taketoprofile(item) {
+    window.location = "#profile/"+item.innerHTML;
 }
 function showProfile(profile) {
     var userid = profile['userid'];
@@ -362,6 +406,8 @@ function showProfile(profile) {
         oldestTweetId = parseInt(profile['tweets'][0]['postid']);
     else
         oldestTweetId = 0;
+    profile['tweets'] = processTweets(profile['tweets']);
+    console.log(profile['tweets']);
     populateListByPrepend($("#tweetContainer"),profile['tweets'],$("#tmpl-tweet").html(),"tweet-","postid");
     populateListByPrepend($("#followersContainer"),profile['followerslist'].slice(0,10),$("#tmpl-user").html(),"follower-","userid");
     populateListByPrepend($("#followingContainer"),profile['followinglist'].slice(0,10),$("#tmpl-user").html(),"following-","userid");
