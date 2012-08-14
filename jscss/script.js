@@ -1,12 +1,17 @@
 // Event Handlers
-$('#tweetBox').on("propertychange input textInput", function () {
-    var left = 140 - $(this).val().length;
+$('#tweetBox').on("propertychange textarea textInput", function () {
+    var str = $(this).val();
+    var len = str.length;
+    if(len>140) {
+        $(this).val(str.substr(0,140));
+        len = 140;
+    }
+    var left = 140 - len;
     if (left < 0) {
         left = 0;
     }
     $('#counter').text('Characters left: ' + left);
 });
-
 $("#logoutButton").click(function() {
     $.post('/backend/logout/',{}, function(data) {
         if(data['message']=="Successfully logged out")
@@ -26,6 +31,7 @@ $("#tweetBox").blur(function() {
 $("#clearBtn").click(function() {
     $("#tweetBox").fadeOut(function() {
         $("#tweetBox").val("");
+        $("#counter").html("");
         $("#tweetBox").focus();
         resizeIt();
         $("#tweetBox").fadeIn();
@@ -39,6 +45,7 @@ $("#postBtn").click(function() {
         hideTicker();
         $("#tweetBox").fadeOut(function() {
             $("#tweetBox").val("");
+            $("#counter").html("");
             resizeIt();
             $("#tweetBox").blur();
             $("#tweetBox").fadeIn();
