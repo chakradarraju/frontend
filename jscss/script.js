@@ -78,7 +78,7 @@ $("#followButton").click(function() {
         myProfile = processProfile(data['myProfile']);
         displayedProfile = processProfile(data['currentProfile']);
         showProfile(displayedProfile);
-        alert(data['message']);
+        myalert(data['message']);
     }, "json");
 });
 $("#unfollowButton").click(function() {
@@ -88,7 +88,7 @@ $("#unfollowButton").click(function() {
         myProfile = processProfile(data['myProfile']);
         displayedProfile = processProfile(data['currentProfile']);
         showProfile(displayedProfile);
-        alert(data['message']);
+        myalert(data['message']);
     }, "json");
 });
 $("#editProfileSave").click(function() {
@@ -99,7 +99,7 @@ $("#editProfileSave").click(function() {
         "emailid": $("#editProfileEmail").val(),
         "password":$.md5($("#editProfilePassword").val())
     }, function(data) {
-        alert(data['message']);
+        myalert(data['message']);
     }, "json");
 });
 $("#editProfileBackground").change(function() {
@@ -108,7 +108,7 @@ $("#editProfileBackground").change(function() {
 });
 $(document).keyup(function(e) {
     if(e.which == 27)
-        closepopup(e);
+        closealert(e);
 });
 window.onhashchange = router;
 setInterval(refreshTimes, 30000);
@@ -168,17 +168,12 @@ function closeSearchPopup() {
     $("#searchBox").val("");
     $("#searchList").html("<li><a>Start typing to search users</a></li>")
 }
-function popup(list,template) {
-    $("#popupClose").href=window.url;
-    $("#popupContainer").html("");
-    _.each(list, function(item,i) {
-        item['id'] = "popup-"+i;
-        $("#popupContainer").append(_.template(template, item));
-    });
-    $("#popupContainer :hidden").show();
+function myalert(message) {
+    $("#popupContainer").html(message);
     $("#popup").fadeIn();
+    $("#popup").focus();
 }
-function closepopup(e) {
+function closealert(e) {
     if($("#popup").css("display")!="none") {
         $("#popup").fadeOut();
     }
@@ -200,7 +195,6 @@ function refreshTimes() {
     });
 }
 function showTab(tab) {
-    closepopup();
     $(".sector").removeClass("active");
     $("#tab-"+tab).addClass("active");
     $(".menuitem").removeClass("active");
@@ -330,8 +324,9 @@ function getProfile(userid,callback) {
     else url = '/backend/profile/'+userid;
     $.get(url,{},function(data) {
         if(data['message']=="Userid does not exist") {
-            alert("User not found");
+            myalert("User not found");
             window.location = "#feeds";
+            return;
         }
         data = processProfile(data);
         if(userid==null) myProfile = data;
@@ -407,7 +402,6 @@ function showProfile(profile) {
     else
         oldestTweetId = 0;
     profile['tweets'] = processTweets(profile['tweets']);
-    console.log(profile['tweets']);
     populateListByPrepend($("#tweetContainer"),profile['tweets'],$("#tmpl-tweet").html(),"tweet-","postid");
     populateListByPrepend($("#followersContainer"),profile['followerslist'].slice(0,10),$("#tmpl-user").html(),"follower-","userid");
     populateListByPrepend($("#followingContainer"),profile['followinglist'].slice(0,10),$("#tmpl-user").html(),"following-","userid");
@@ -508,7 +502,7 @@ function showEditProfile() {
 }
 function validateEditProfile() {
     if($("#editProfilePassword").val()!=$("#editProfileConfirmPassword").val()) {
-        alert("Passwords don't match");
+        myalert("Passwords don't match");
         $("#editProfilePassword").val("").focus();
         $("#editProfileConfirmPassword").val("");
         return false;
@@ -534,10 +528,8 @@ var myProfile = null;
 var displayedProfile = null;
 var displayedSearch = null;
 function following(userid) {
-    console.log('before');
     if(myProfile==null)
         return false;
-    console.log("something");
     for(i in myProfile['followinglist']) {
         if(myProfile['followinglist'][i]['userid']==userid)
             return true;
