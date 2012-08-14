@@ -466,6 +466,10 @@ function showSearch(result) {
     $("#searchTweetTab a").html("Tweets ("+result['tweets'].length+")");
     $("#searchUserContainer").html("");
     $("#searchTweetContainer").html("");
+    _.each(result['users'],function(user,i) {
+        result['users'][i]['showbutton'] = true;
+    });
+    result['tweets'] = processTweets(result['tweets']);
     populateListByPrepend($("#searchUserContainer"),result['users'],$("#tmpl-user").html(),"search-user-","userid");
     populateListByPrepend($("#searchTweetContainer"),result['tweets'],$("#tmpl-tweet").html(),"search-tweet-","postid");
 }

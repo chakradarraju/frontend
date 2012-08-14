@@ -184,11 +184,11 @@
         <a href="#profile/<%=userid%>">Tweets: <%=postcount%></a> <a href="#profile/<%=userid%>/followers">Followers: <%=followerscount%></a> <a href="#profile/<%=userid%>/following">Following: <%=followingcount%></a><br/>
         <% } %>
         &nbsp;
-        <% if(following(userid)) { %>
+        <% if(typeof showbutton != 'undefined') { if(following(userid)) { %>
         <button class="btn" onclick="updateSearchUser('unfollow/<%=userid%>')">UnFollow</button>
         <% } else if(myProfile!=null&&userid!=myProfile['userid']) { %>
         <button class="btn btn-primary" onclick="updateSearchUser('follow/<%=userid%>')">Follow</button>
-        <% } %>
+        <% } }%>
         <span class="email"> EmailId: <%=emailid%></span><br/>
     </div>
 </script>
