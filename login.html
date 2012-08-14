@@ -10,9 +10,9 @@
         left: 50%;
         top: 50%;
         margin-left: -450px;
-        margin-top: -200px;
+        margin-top: -250px;
         padding: 0px;
-        height: 400px;
+        height: 500px;
         text-align: left;
     }
     .formContainer {
@@ -40,15 +40,15 @@
     #loginPanel {
         float: left;
         width: 260px;
-        height: 360px;
+        height: 460px;
         margin: 0px;
     }
     #bannerText {
         float: left;
         color: white;
         position: absolute;
-        left: 300px;
-        top: 330px;
+        left: 180px;
+        top: 425px;
         font-family: serif;
         font-size: 28px;
     }
@@ -56,8 +56,8 @@
 </head>
 <body>
 <div id="content-wrapper">
-    <div id="banner">
-        <img src="img/connect.jpg" alt="" style="display: inline;">
+    <div id="banner" style="overflow: hidden">
+        <img src="img/connect.jpg" alt="" style="display: block; width: 600px; height: 500px;">
         <span id="bannerText">
             Connect with people...<br/>
             Find whats new
@@ -66,8 +66,8 @@
     <div class="well form-inline" id="loginPanel">
         <center><img src="img/mini.png" /></center>
         <div style="margin: 20px; overflow: hidden;">
-            <div id="slideFrame" style="width: 520px;">
-                <div id="loginDiv" class="formContainer" style="margin-top:70px;">
+            <div id="slideFrame" style="width: 670px;">
+                <div id="loginDiv" class="formContainer" style="margin-top:120px;">
                     <input type="text" id="loginEmailid" placeholder="Email..." /><br/>
                     <input type="password" id="loginPassword" placeholder="Password..." /><br/>
                     <div style="margin-top:10px;margin-left:20px;">
@@ -81,7 +81,7 @@
                     <input type="text" id="registerEmailid" placeholder="Email..." /><br/>
                     <input type="password" id="registerPassword" placeholder="Password..." /><br/>
                     <input type="password" id="registerConfirmPassword" placeholder="Confirm Password..." /><br/>
-
+                    <div id="captchadiv" style="width: 260px; height: 123px;" ></div>
                     <div style="margin-top:15px;margin-left:20px;">
                         <button id="registerLoginButton" class="btn">&lt;&lt; Login</button>
                         <button id="registerButton" class="btn btn-success">Register</button>
@@ -91,19 +91,23 @@
             </div>
         </div>
     </div>
-		    <div id="captchadiv" ></div><!--class="formContainer" style="margin-top: 20px;"> </div>	-->
+		    <!--class="formContainer" style="margin-top: 20px;"> </div>	-->
 </div>
 <script src="jscss/jquery.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
+<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script>
     $("#loginRegisterButton").click(function() {
         $("#slideFrame").animate({marginLeft:-260});
-	showRecaptcha();
-    })
+        $("#banner").animate({width:470});
+        $("#loginPanel").animate({width:390});
+    });
     $("#registerLoginButton").click(function() {
         $("#slideFrame").animate({marginLeft:0});
-    })
+        $("#banner").animate({width:600});
+        $("#loginPanel").animate({width:260});
+    });
     $("#loginButton").click(function() {
         $.post("/backend/login/", {
             'emailid': $("#loginEmailid").val(),
@@ -175,12 +179,10 @@
     });
 	function showRecaptcha(){
             Recaptcha.create("6LdFFdUSAAAAAOer2GmofSOlk_X2EAlV3-dHUUl6","captchadiv",{
-                tabindex: 1,
-                theme: "clean",
-                callback: Recaptcha.focus_response_field
+                theme: "clean"
             });
 	}
+    showRecaptcha();
 </script>
-<script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script> 
 </body>
 </html>
