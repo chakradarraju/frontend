@@ -115,6 +115,9 @@ $("#editProfileBackground").change(function() {
     $("body").css("background","url('"+$(this).val()+"')");
     $.cookie("background",$(this).val());
 });
+$("#profilePicForm").ajaxForm(function(data) {
+    myalert(data['message']);
+},"json");
 $(document).keyup(function(e) {
     if(e.which == 27)
         closealert(e);
@@ -232,7 +235,7 @@ function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 function updateMiniProfile(profile) {
-    $("#miniProfilePic").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(profile['emailid'])+"?s=");
+    $("#miniProfilePic").attr("src","avatar/"+profile['userid']+"?s=");
     $("#miniProfileName").html(profile['username']);
     $("#miniProfileId").html(profile['userid']);
     $("#miniProfileTweets").html(profile['postcount']);
@@ -269,7 +272,6 @@ function updateFeed() {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
             tweet['id'] = "feed-"+tweet['feedid'];
-            tweet['gravatarhash'] = $.md5(trim(tweet['sourceuser']['emailid']).toLowerCase());
             $("#feedContainer").prepend(_.template($("#tmpl-tweet").html(),tweet));
         });
         $("#feedContainer :hidden").slideDown();
@@ -289,7 +291,6 @@ function loadOlderFeed() {
         _.each(data['tweets'], function(tweet,tweetid) {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
-            tweet['gravatarhash'] = gravatarhashfunction(tweet['sourceuser']['emailid']);
             tweet['id'] = "feed-"+tweet['feedid'];
             $("#feedContainer").append(_.template($("#tmpl-tweet").html(),tweet));
         });
@@ -310,7 +311,6 @@ function loadOlderTweet() {
             tweet['sourceuser'] = JSON.parse(tweet['sourceuser']);
             tweet['postcontent'] = tweet['postcontent'].replace(/\n/g,"<br/>");
             tweet['id'] = "feed-"+tweet['feedid'];
-            tweet['gravatarhash'] = gravatarhashfunction(tweet['sourceuser']['emailid']);
             $("#tweetContainer").append(_.template($("#tmpl-tweet").html(),tweet));
         });
         $("#tweetContainer :hidden").slideDown();
@@ -342,9 +342,6 @@ function getProfile(userid,callback) {
         callback(data);
         hideTicker();
     }, "json");
-}
-function gravatarhashfunction(emailid) {
-    return $.md5(trim(emailid).toLowerCase());
 }
 function processTweets(tweets) {
     _.each(tweets,function(tweet,i) {
@@ -392,7 +389,7 @@ function showProfile(profile) {
         profileUserId = userid;
     }
     displayedProfile = profile;
-    $("#profileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(profile['emailid'])+"?s=100")
+    $("#profileImage").attr("src","avatar/"+profile['userid'])
     $("#profileUsername").html(profile['username']);
     $("#profileEmailId").html(profile['emailid']);
     $("#profileTweetsLink").attr("href","#profile/"+profileUserId+"/tweets");
@@ -425,10 +422,6 @@ function showProfile(profile) {
 function populateListByPrepend(container,list,template,prefix,idcol) {
     _.each(list,function(item,id) {
         item['id'] = prefix+item[idcol];
-        if(item['sourceuser'])
-            item['gravatarhash'] = gravatarhashfunction(item['sourceuser']['emailid']);
-        else
-            item['gravatarhash'] = gravatarhashfunction(item['emailid']);
         if(!document.getElementById(item['id']))
             container.prepend(_.template(template,item));
     });
@@ -437,10 +430,6 @@ function populateListByPrepend(container,list,template,prefix,idcol) {
 function populateListByAppend(container,list,template,prefix,idcol) {
     _.each(list,function(item,id) {
         item['id'] = prefix+item[idcol];
-        if(item['sourceuser'])
-            item['gravatarhash'] = gravatarhashfunction(item['sourceuser']['emailid']);
-        else
-            item['gravatarhash'] = gravatarhashfunction(item['emailid']);
         if(!document.getElementById(item['id']))
             container.append(_.template(template,item));
     });
@@ -500,7 +489,6 @@ function updateSearchUser(url) {
             showProfile(displayedProfile);
         }
         newuserdata['id'] = "search-user-"+newuserdata['userid'];
-        newuserdata['gravatarhash'] = gravatarhashfunction(newuserdata['emailid']);
         $("#search-user-"+newuserdata['userid']).replaceWith(_.template($("#tmpl-user").html(),newuserdata));
         $("#searchUserContainer :hidden").show();
         hideTicker();
@@ -510,7 +498,7 @@ function showEditProfile() {
     if(myProfile!=null) {
         $("#editProfileUsername").val(myProfile['username']);
         $("#editProfileEmail").val(myProfile['emailid']);
-        $("#editProfileImage").attr("src","http://www.gravatar.com/avatar/"+gravatarhashfunction(myProfile['emailid']));
+        $("#editProfileImage").attr("src","avatar/"+myProfile['userid']);
     }
 }
 function validateEditProfile() {
@@ -532,6 +520,11 @@ function updateMyProfile() {
 function setMyProfile(profile) {
     myProfile = profile;
     updateMiniProfile(profile);
+}
+function retweet(postid) {
+    $.post('/backend/retweet/',{"postid":postid},function(data) {
+        myalert(data['message']);
+    },"json");
 }
 
 // Data

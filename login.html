@@ -157,10 +157,10 @@
             if(data['message']=="Login success")
                 window.location = "/frontend/";
             else if(data['message']=="Already Logged In"){
-			window.location = "/frontend/";
-                 }
-	    else
-            myalert("Wrong Username/Email and password combination");
+			    window.location = "/frontend/";
+            }
+	        else
+                myalert(data['message']);
         }, "json");
     });
     $("#registerButton").click(function() {
@@ -206,8 +206,6 @@
                 showRecaptcha();
                 $("#recaptcha_response_field").val("").focus();
                 return false;
-            } else if(data['message']=="Registration success") {
-                window.location = '/frontend/';
             } else {
                 myalert(data['message']);
             }

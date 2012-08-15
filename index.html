@@ -31,7 +31,7 @@
     <div id="tab-feed" class="sector">
         <div id="dashboard">
             <div class="brick">
-                <img src="" id="miniProfilePic" class="gravatar" alt="Profile Pic">
+                <img src="" id="miniProfilePic" class="avatar" alt="Profile Pic" style="height: 80px; width: 80px;">
                 <h3><span id="miniProfileName"></span></h3>
                 @<span id="miniProfileId"></span><br/>
                 <div class="clearer"></div>
@@ -68,7 +68,7 @@
     <div id="tab-profile" class="sector">
         <div id="content-profile">
             <div class="brick">
-                <img id="profileImage" src="" class="gravatar"/>
+                <img id="profileImage" src="" class="avatar" style="height: 100px; width: 100px;"/>
                 <button class="btn btn-primary btn-large" id="followButton" style="float:right;">Follow</button>
                 <button class="btn btn-large" id="unfollowButton" style="float:right;">UnFollow</button>
                 <button class="btn btn-primary btn-large" id="editProfileButton" style="float:right;" onclick="window.location='#editProfile'">Edit Profile</button>
@@ -111,7 +111,11 @@
     <div id="tab-editprofile" class="sector">
         <div id="content-editprofile">
             <div class="brick form-inline">
-                <a href="http://www.gravatar.com/"><img id="editProfileImage" src="" class="gravatar" style="float: none;"/></a><br/>
+                <a href="#editprofile"><img id="editProfileImage" src="" class="avatar" style="width:100px; height: 100px; float: none;"/></a><br/>
+                <form id="profilePicForm" action="/backend/editpicture/" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="picture" />
+                    <input type="submit" value="Upload picture" />
+                </form>
                 <input type="text" id="editProfileUsername" placeholder="Username"/><br/>
                 <input type="text" id="editProfileEmail" placeholder="Email"/><br/>
                 <input type="password" id="editProfilePassword" placeholder="Password"/><br/>
@@ -126,6 +130,7 @@
                     <option value="img/pattern6.gif">Flowers 1</option>
                 </select><br/>
                 <button class="btn btn-primary" id="editProfileSave">Save</button>
+
             </div>
         </div>
     </div>
@@ -164,11 +169,13 @@
 <script src="bootstrap/js/bootstrap.js"></script>
 <script src="jscss/md5.js"></script>
 <script src="jscss/jquery.cookie.js"></script>
+<script src="jscss/jquery.form.js"></script>
 <script type="text/html" id="tmpl-tweet">
     <div class="tweet listing" id="<%=id%>" style="display:none">
-        <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
+        <img src="avatar/<%=sourceuser['userid']%>" class="avatar"/>
         <span class="user"><a href="#profile/<%=sourceuser['userid']%>"><%=sourceuser['username']%></a> @<%=sourceuser['userid']%></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
-        <%=postcontent%>
+        <%=postcontent%><br/>
+        <a href="javascript:void(0);" onclick="retweet(<%=postid%>)">Retweet</a>
     </div>
 </script>
 <script type="text/html" id="tmpl-user-search-popup">
@@ -178,7 +185,7 @@
 </script>
 <script type="text/html" id="tmpl-user">
     <div class="listing" id="<%=id%>" style="display:none;">
-        <img src="http://www.gravatar.com/avatar/<%=gravatarhash%>?s=64" class="gravatar"/>
+        <img src="avatar/<%=userid%>" class="avatar"/>
         <span class="user"><a href="#profile/<%=userid%>"><%=username%></a> @<%=userid%></span><br/>
         <% if(typeof postcount != 'undefined') { %>
         <a href="#profile/<%=userid%>">Tweets: <%=postcount%></a> <a href="#profile/<%=userid%>/followers">Followers: <%=followerscount%></a> <a href="#profile/<%=userid%>/following">Following: <%=followingcount%></a><br/>

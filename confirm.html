@@ -1,0 +1,91 @@
+<html>
+<head>
+<title>Twitter App</title>
+<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+<link type="text/css" rel="stylesheet" href="jscss/style.css" />
+<style type="text/css">
+    #content-wrapper {
+        position: relative;
+        width: 900px;
+        left: 50%;
+        top: 50%;
+        margin-left: -450px;
+        margin-top: -200px;
+        padding: 0px;
+        height: 400px;
+        text-align: left;
+    }
+    .formContainer {
+        width: 260px;
+        float: left;
+    }
+
+    input[type=text], input[type=password] {
+        height: 30px;
+        margin: 5px;
+    }
+    label {
+        width: 140px;
+        text-align: right;
+    }
+    body {
+        background: url('img/people.jpg');
+    }
+    #banner {
+        float: left;
+        width: 600px;
+        height: 500px;
+        margin: 0px;
+    }
+    #loginPanel {
+        float: left;
+        width: 260px;
+        height: 360px;
+        margin: 0px;
+    }
+    #bannerText {
+        float: left;
+        color: white;
+        position: absolute;
+        left: 300px;
+        top: 330px;
+        font-family: serif;
+        font-size: 28px;
+    }
+</style>
+</head>
+<body>
+<div id="content-wrapper">
+    <div id="banner">
+    <div class="well form-inline" id="loginPanel">
+        <center><img src="img/mini.png" /></center>
+        <div style="margin: 20px; overflow: hidden;">
+            <div id="slideFrame" style="width: 520px;">
+                <div id="loginDiv" class="formContainer" style="margin-top:70px;">
+                    <div style="margin-top:10px;margin-left:20px;">
+                        <button id="loginButton" class="btn btn-primary">Click It!!</button>
+                    </div>
+                </div>
+                <div class="clearer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="jscss/jquery.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
+<script src="jscss/md5.js"></script>
+<script>
+    $("#loginButton").click(function() {
+        $.post("/backend/confirm", {
+		'emailid':getURLParameter('emailid'),
+		'hash':getURLParameter('hash')
+        },function(data) {alert(data['message']);},"json");
+	})
+function getURLParameter(name) {
+    return decodeURI(
+        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+    );
+}
+</script>
+</body>
+</html>
