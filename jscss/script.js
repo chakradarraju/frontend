@@ -38,6 +38,7 @@ $("#clearBtn").click(function() {
     });
 });
 $("#postBtn").click(function() {
+    $(this).attr("disabled","disabled");
     showTicker("Posting tweet...");
     $.post("/backend/post/",{
         'postcontent':$("#tweetBox").val()
@@ -50,6 +51,7 @@ $("#postBtn").click(function() {
             $("#tweetBox").blur();
             $("#tweetBox").fadeIn();
         });
+        document.getElementById("postBtn").removeAttribute("disabled");
         updateFeed();
         myProfile['postcount']++;
         updateMiniProfile(myProfile);
@@ -121,11 +123,15 @@ $("#editProfileSave").click(function() {
         $("#editProfilePassword").val("").focus();
         return false;
     }
+    var currentpassword = "";
+    if($("#editProfileCurrentPassword").val()!="")
+        currentpassword = $.md5($("#editProfileCurrentPassword").val());
     var md5ed = $.md5(password);
     if(password=="") md5ed = "";
     $.post('/backend/editprofile/',{
         "username": $("#editProfileUsername").val(),
         "emailid": $("#editProfileEmail").val(),
+        "currentpassword": currentpassword,
         "password":md5ed
     }, function(data) {
         myalert(data['message']);
@@ -267,7 +273,6 @@ function updateMiniProfile(profile) {
     $("#miniProfileFollowingLink").attr("href","#profile/"+profile['userid']+"/following");
 }
 function updateFeed() {
-    console.log("updating feed");
     var ticker = false;
     if(arguments.length==0)
         ticker = true;
@@ -281,9 +286,7 @@ function updateFeed() {
         url = '/backend/feed/after';
         obj = { "feedId": latestFeedId };
     }
-    console.log("doing get");
     $.get(url,obj,function(data) {
-        console.log("got data");
         if(data['display']=="login")
             window.location = "/frontend/login.html";
         if(data['tweets'].length>0)

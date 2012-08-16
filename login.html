@@ -150,6 +150,7 @@
             $("#registerButton").click();
     });
     $("#loginButton").click(function() {
+        $(this).attr("disabled","disabled");
         $.post("/backend/login/", {
             'emailid': $("#loginEmailid").val(),
             'password':$.md5($("#loginPassword").val())
@@ -161,6 +162,7 @@
             }
 	        else
                 myalert(data['message']);
+            document.getElementById("loginButton").removeAttribute("disabled");
         }, "json");
     });
     $("#registerButton").click(function() {
@@ -188,6 +190,7 @@
             $("#registerEmailid").val("").focus();
             return false;
         }
+        $(this).attr("disabled","disabled");
         $.post("/backend/register/", {
             'emailid': $("#registerEmailid").val(),
             'username': $("#registerUsername").val(),
@@ -196,6 +199,7 @@
     	    'recaptcha_challenge_field':$("#recaptcha_challenge_field").val(),
 	        'recaptcha_response_field':$("#recaptcha_response_field").val()
         }, function(data) {
+            document.getElementById("registerButton").removeAttribute("disabled");
             if(data['message']=="Invalid Email"){
                 myalert("Invalid Email");
                 $("#registerEmailid").val("").focus();
@@ -208,6 +212,11 @@
                 return false;
             } else {
                 myalert(data['message']);
+            }
+            if(data['message']=="Registration success, Verify email to login") {
+                $(".registerField").val("");
+                showRecaptcha();
+                $("#registerLoginButton").click();
             }
         });
     });
