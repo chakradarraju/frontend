@@ -396,7 +396,7 @@ function processTweet(tweet) {
         }
         if(text[i]=='@') {
             mention = true;
-            result += "<a onclick='taketoprofile(this)'>";
+            result += "<a onclick='taketoprofile(this)' href='javascript:void(0);'>";
         } else {
             result += text[i];
         }
