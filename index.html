@@ -111,26 +111,35 @@
     <div id="tab-editprofile" class="sector">
         <div id="content-editprofile">
             <div class="brick form-inline">
-                <a href="#editprofile"><img id="editProfileImage" src="" class="avatar" style="width:100px; height: 100px; float: none;"/></a><br/>
-                <form id="profilePicForm" action="/backend/editpicture/" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="picture" />
-                    <input type="submit" value="Upload picture" />
-                </form>
-                <input type="text" id="editProfileUsername" placeholder="Username"/><br/>
-                <input type="text" id="editProfileEmail" placeholder="Email"/><br/>
-                <input type="password" id="editProfilePassword" placeholder="Password"/><br/>
-                <input type="password" id="editProfileConfirmPassword" placeholder="Confirm Password"/><br/>
+                <div style="margin: 20px;">
+                    <div style="float: left; width: 50%">
+                        <h2>Edit profile Picture:</h2>
+                        <a href="#editprofile"><img id="editProfileImage" src="" class="avatar" style="width:100px; height: 100px; float: none;"/></a><br/>
+                        <form id="profilePicForm" action="/backend/editpicture/" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="picture" />
+                            <input type="submit" value="Upload picture" />
+                        </form>
 
-                <select id="editProfileBackground">
-                    <option value="img/pattern1.gif">Chakras</option>
-                    <option value="img/pattern2.png">ABC</option>
-                    <option value="img/pattern3.jpg">Mesh</option>
-                    <option value="img/pattern4.jpg">Curls</option>
-                    <option value="img/pattern5.jpg">Blue cells</option>
-                    <option value="img/pattern6.gif">Flowers 1</option>
-                </select><br/>
-                <button class="btn btn-primary" id="editProfileSave">Save</button>
-
+                        <h2>Edit Background:</h2>
+                        <select id="editProfileBackground">
+                            <option value="img/pattern1.gif">Chakras</option>
+                            <option value="img/pattern2.png">ABC</option>
+                            <option value="img/pattern3.jpg">Mesh</option>
+                            <option value="img/pattern4.jpg">Curls</option>
+                            <option value="img/pattern5.jpg">Blue cells</option>
+                            <option value="img/pattern6.gif">Flowers 1</option>
+                        </select>
+                    </div>
+                    <div style="float: left; width: 50%">
+                        <h2>Edit profile information:</h2>
+                        <input type="text" id="editProfileUsername" placeholder="Username"/><br/>
+                        <input type="text" id="editProfileEmail" placeholder="Email"/><br/>
+                        <input type="password" id="editProfilePassword" placeholder="Password"/><br/>
+                        <input type="password" id="editProfileConfirmPassword" placeholder="Confirm Password"/><br/>
+                        <button class="btn btn-primary" id="editProfileSave">Save</button>
+                    </div>
+                    <div class="clearer"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -164,12 +173,15 @@
 </div>
 <div id="ticker"></div>
 
-<script src="jscss/jquery.js"></script>
-<script src="jscss/underscore.js"></script>
+<!--
+<script src="jscss/jquery.min.js"></script>
+<script src="jscss/underscore.min.js"></script>
+<script src="jscss/jquery.cookie.min.js"></script>
+<script src="jscss/jquery.form.min.js"></script>
+<script src="jscss/md5.min.js"></script>
 <script src="bootstrap/js/bootstrap.js"></script>
-<script src="jscss/md5.js"></script>
-<script src="jscss/jquery.cookie.js"></script>
-<script src="jscss/jquery.form.js"></script>
+-->
+<script src="jscss/compress.js"></script>
 <script type="text/html" id="tmpl-tweet">
     <div class="tweet listing" id="<%=id%>" style="display:none">
         <img src="avatar/<%=sourceuser['userid']%>" class="avatar"/>

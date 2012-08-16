@@ -169,14 +169,14 @@
             $("#registerUsername").val("").focus();
             return false;
         }
-        if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
-            myalert("Passwords do not match");
+        if($("#registerPassword").val().length<6){
+            myalert("Passwords should not be less than 6 characters");
             $("#registerConfirmPassword").val("");
             $("#registerPassword").val("").focus();
             return false;
         }
-        if($("#registerPassword").val().length<6){
-            myalert("Passwords should not be less than 6 characters");
+        if($("#registerPassword").val()!=$("#registerConfirmPassword").val()) {
+            myalert("Passwords do not match");
             $("#registerConfirmPassword").val("");
             $("#registerPassword").val("").focus();
             return false;

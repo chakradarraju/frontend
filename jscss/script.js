@@ -103,10 +103,30 @@ $("#unfollowButton").click(function() {
 $("#editProfileSave").click(function() {
     if(!validateEditProfile())
         return true;
+    if($("#editProfileUsername").val()==""){
+        myalert("Enter Username");
+        $("#editProfileUsername").val("").focus();
+        return false;
+    }
+    var password = $("#editProfilePassword").val(), confirmPassword = $("#editProfileConfirmPassword").val();
+    if(password.length>0&&password.length<6){
+        myalert("Passwords should not be less than 6 characters");
+        $("#editProfileConfirmPassword").val("");
+        $("#editProfilePassword").val("").focus();
+        return false;
+    }
+    if(password!=confirmPassword) {
+        myalert("Passwords do not match");
+        $("#editProfileConfirmPassword").val("");
+        $("#editProfilePassword").val("").focus();
+        return false;
+    }
+    var md5ed = $.md5(password);
+    if(password=="") md5ed = "";
     $.post('/backend/editprofile/',{
         "username": $("#editProfileUsername").val(),
         "emailid": $("#editProfileEmail").val(),
-        "password":$.md5($("#editProfilePassword").val())
+        "password":md5ed
     }, function(data) {
         myalert(data['message']);
     }, "json");
@@ -117,6 +137,7 @@ $("#editProfileBackground").change(function() {
 });
 $("#profilePicForm").ajaxForm(function(data) {
     myalert(data['message']);
+    $("#editProfileImage").attr("src","avatar/"+myProfile['userid']+"?time="+new Date().getTime());
 },"json");
 $(document).keyup(function(e) {
     if(e.which == 27)
@@ -144,7 +165,7 @@ function router() {
             $("#container").animate({marginLeft:0});
     } else if(broken[0]=="editProfile") {
         showTab('editprofile');
-        showEditProfile();
+        updateMyProfile();
     } else if(broken[0]=="search") {
         showTab('search');
         if(broken.length>1&&displayedSearch!=broken[1]) {
@@ -235,7 +256,7 @@ function trim(str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 }
 function updateMiniProfile(profile) {
-    $("#miniProfilePic").attr("src","avatar/"+profile['userid']+"?s=");
+    $("#miniProfilePic").attr("src","avatar/"+profile['userid']);
     $("#miniProfileName").html(profile['username']);
     $("#miniProfileId").html(profile['userid']);
     $("#miniProfileTweets").html(profile['postcount']);
@@ -246,6 +267,7 @@ function updateMiniProfile(profile) {
     $("#miniProfileFollowingLink").attr("href","#profile/"+profile['userid']+"/following");
 }
 function updateFeed() {
+    console.log("updating feed");
     var ticker = false;
     if(arguments.length==0)
         ticker = true;
@@ -259,7 +281,9 @@ function updateFeed() {
         url = '/backend/feed/after';
         obj = { "feedId": latestFeedId };
     }
+    console.log("doing get");
     $.get(url,obj,function(data) {
+        console.log("got data");
         if(data['display']=="login")
             window.location = "/frontend/login.html";
         if(data['tweets'].length>0)
@@ -520,6 +544,7 @@ function updateMyProfile() {
 function setMyProfile(profile) {
     myProfile = profile;
     updateMiniProfile(profile);
+    showEditProfile();
 }
 function retweet(postid) {
     $.post('/backend/retweet/',{"postid":postid},function(data) {
