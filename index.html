@@ -27,6 +27,11 @@
 </div>
 <div id="content-wrapper">
 
+    <div id="message" style="display: none;">
+        <a id="messageClose" onclick="closealert(this)" href="javascript:void(0);">X</a>
+        <div id="messageContent"></div>
+    </div>
+
     <!-- feed -->
     <div id="tab-feed" class="sector">
         <div id="dashboard">
@@ -188,7 +193,9 @@
         <img src="avatar/<%=sourceuser['userid']%>" class="avatar"/>
         <span class="user"><a href="#profile/<%=sourceuser['userid']%>"><%=sourceuser['username']%></a> @<%=sourceuser['userid']%></span><span class="timestamp" ref="<%=timestamp%>"></span> <br/>
         <%=postcontent%><br/>
+        <% if(myProfile!=null&&sourceuser['userid']!=myProfile['userid']) { %>
         <a href="javascript:void(0);" onclick="retweet(<%=postid%>)">Retweet</a>
+        <% } %>
     </div>
 </script>
 <script type="text/html" id="tmpl-user-search-popup">

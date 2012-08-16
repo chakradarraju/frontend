@@ -144,3 +144,11 @@ input[type=text], input[type=password] {
     height: 30px;
     margin: 5px;
 }
+#message {
+    background: rgba(255,255,0,0.8);
+    padding: 10px;
+    border-radius: 8px;
+}
+#messageClose {
+    float: right;
+}

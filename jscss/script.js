@@ -208,13 +208,12 @@ function closeSearchPopup() {
     $("#searchList").html("<li><a>Start typing to search users</a></li>")
 }
 function myalert(message) {
-    $("#popupContainer").html(message);
-    $("#popup").fadeIn();
-    $("#popup").focus();
+    $("#messageContent").html(message);
+    $("#message").slideDown();
 }
 function closealert(e) {
-    if($("#popup").css("display")!="none") {
-        $("#popup").fadeOut();
+    if($("#message").css("display")!="none") {
+        $("#message").slideUp();
     }
 }
 function refreshFeed() {
