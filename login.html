@@ -52,30 +52,8 @@
         font-family: serif;
         font-size: 28px;
     }
-    #popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        margin-top: -40px;
-        margin-left: -200px;
-        height: 80px;
-        width: 400px;
-        display: none;
-        border: 10px solid rgba(82, 82, 82, 0.7);
-        border-radius: 8px;
-    }
-    #popupInner {
-        background: white;
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        text-align: center;
-    }
-    #popupContainer {
-        margin: 10px;
-        text-align: left;
+    #message {
+        background: none;
     }
 </style>
 </head>
@@ -91,6 +69,10 @@
     <div class="well form-inline" id="loginPanel">
         <center><img src="img/mini.png" /></center>
         <div style="margin: 20px; overflow: hidden;">
+            <div id="message" style="width: 100%; height: 18px;">
+                <div id="messageClose" style="float:right"><a onclick="closealert(this)" href="javascript:void(0);">X</a></div>
+                <div id="messageContent"></div>
+            </div>
             <div id="slideFrame" style="width: 670px;">
                 <div id="loginDiv" class="formContainer" style="margin-top:120px;">
                     <input type="text" id="loginEmailid" class="loginField" placeholder="Email..." /><br/>
@@ -100,7 +82,7 @@
                         <button id="loginRegisterButton" class="btn" >Register &gt;&gt;</button>
                     </div>
                 </div>
-                <div id="registerDiv" class="formContainer" style="margin-top: 20px;">
+                <div id="registerDiv" class="formContainer" style="margin-top: 0px;">
                     <input type="text" id="registerUsername" class="registerField" placeholder="Display Name..." /><br/>
                     <input type="text" id="registerUserid" class="registerField" placeholder="Username..." /><br/>
                     <input type="text" id="registerEmailid" class="registerField" placeholder="Email..." /><br/>
@@ -132,11 +114,13 @@
 <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 <script>
     $("#loginRegisterButton").click(function() {
+        $("#messageContent").html("");
         $("#slideFrame").animate({marginLeft:-260});
         $("#banner").animate({width:470});
         $("#loginPanel").animate({width:390});
     });
     $("#registerLoginButton").click(function() {
+        $("#messageContent").html("");
         $("#slideFrame").animate({marginLeft:0});
         $("#banner").animate({width:600});
         $("#loginPanel").animate({width:260});
@@ -226,19 +210,11 @@
         });
 	}
     function myalert(message) {
-        $("#popupContainer").html(message);
-        $("#popup").fadeIn();
-        $("#popup").focus();
+        $("#messageContent").html(message);
     }
-    function closealert(e) {
-        if($("#popup").css("display")!="none") {
-            $("#popup").fadeOut();
-        }
+    function closealert() {
+        $("#messageContent").html("");
     }
-    $(document).keyup(function(e) {
-        if(e.which == 27)
-            closealert(e);
-    });
     showRecaptcha();
 </script>
 </body>
