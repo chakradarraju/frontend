@@ -18,6 +18,9 @@ $("#logoutButton").click(function() {
             window.location = "/frontend/login.html";
     },"json");
 });
+$("#registerLoginButton").click(function() {
+    window.location = "#feed";
+});
 $("#tweetBox").focus(function() {
     $(this).prev().slideDown();
     $(this).next().slideDown();
@@ -560,8 +563,9 @@ function validateEditProfile() {
 function updateMyProfile() {
     $.get('/backend/myprofile/',{},function(data) {
         if(data['display']=="login")
-            window.location = "/frontend/login.html";
-        setMyProfile(processProfile(data));
+            myProfile = null;
+        else
+            setMyProfile(processProfile(data));
     }, "json");
 }
 function setMyProfile(profile) {
@@ -569,6 +573,11 @@ function setMyProfile(profile) {
     updateMiniProfile(profile);
     showEditProfile();
     loadBookMarks();
+    showLogout();
+}
+function showLogout() {
+    $("#logoutButton").show();
+    $("#registerLoginButton").hide();
 }
 function retweet(postid) {
     $.post('/backend/retweet/',{"postid":postid},function(data) {

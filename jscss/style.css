@@ -68,6 +68,10 @@ body {
     background: yellow;
 }
 #logoutButton {
+    display: none;
+    float: right;
+}
+#registerLoginButton {
     float: right;
 }
 .sector.active {
