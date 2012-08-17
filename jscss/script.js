@@ -105,24 +105,7 @@ $("#unfollowButton").click(function() {
 $("#editProfileSave").click(function() {
     if(!validateEditProfile())
         return true;
-    if($("#editProfileUsername").val()==""){
-        myalert("Enter Username");
-        $("#editProfileUsername").val("").focus();
-        return false;
-    }
     var password = $("#editProfilePassword").val(), confirmPassword = $("#editProfileConfirmPassword").val();
-    if(password.length>0&&password.length<6){
-        myalert("Passwords should not be less than 6 characters");
-        $("#editProfileConfirmPassword").val("");
-        $("#editProfilePassword").val("").focus();
-        return false;
-    }
-    if(password!=confirmPassword) {
-        myalert("Passwords do not match");
-        $("#editProfileConfirmPassword").val("");
-        $("#editProfilePassword").val("").focus();
-        return false;
-    }
     var currentpassword = "";
     if($("#editProfileCurrentPassword").val()!="")
         currentpassword = $.md5($("#editProfileCurrentPassword").val());
@@ -145,6 +128,21 @@ $("#profilePicForm").ajaxForm(function(data) {
     myalert(data['message']);
     $("#editProfileImage").attr("src","avatar/"+myProfile['userid']+"?time="+new Date().getTime());
 },"json");
+$("#bookmarkInput").keyup(function(e) {
+    if(e.which == 13) {
+        var now = $(this).val();
+        if(now!="") {
+            addToBookmark(now);
+            $(this).val("");
+        }
+    }
+});
+$("#bookmarkButton").click(function() {
+    var now = $("#bookmarkInput").val();
+    if(now!="")
+        addToBookmark(now);
+    $("#bookmarkInput").val("");
+});
 $(document).keyup(function(e) {
     if(e.which == 27)
         closealert(e);
@@ -200,6 +198,7 @@ function setup() {
     }
     $("#editProfileBackground").val(background);
     $("#tweetBox").focus();
+    loadBookMarks();
 }
 function closeSearchPopup() {
     $("#menu-search").removeClass("open");
@@ -534,6 +533,29 @@ function validateEditProfile() {
         $("#editProfileConfirmPassword").val("");
         return false;
     }
+    if($("#editProfileUsername").val()==""){
+        myalert("Enter Username");
+        $("#editProfileUsername").val("").focus();
+        return false;
+    }
+    var password = $("#editProfilePassword").val(), confirmPassword = $("#editProfileConfirmPassword").val();
+    if(password.length>0&&password.length<6){
+        myalert("Passwords should not be less than 6 characters");
+        $("#editProfileConfirmPassword").val("");
+        $("#editProfilePassword").val("").focus();
+        return false;
+    }
+    if(password!=confirmPassword) {
+        myalert("Passwords do not match");
+        $("#editProfileConfirmPassword").val("");
+        $("#editProfilePassword").val("").focus();
+        return false;
+    }
+    if($("#editProfileEmail").val().match("^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$")==null) {
+        myalert("Invalid Email");
+        $("#editProfileEmail").focus();
+        return false;
+    }
     return true;
 }
 function updateMyProfile() {
@@ -553,6 +575,36 @@ function retweet(postid) {
         myalert(data['message']);
     },"json");
 }
+function addToBookmark(userid) {
+    bookmarkList.push(userid);
+    $.cookie("bookmarkList",JSON.stringify(bookmarkList));
+    $("#bookmarkList").prepend(renderBookmark(userid));
+    $("#bookmarkList :hidden").slideDown();
+}
+function removeFromBookmark(userid,item) {
+    $(item).parent().slideUp(function() {
+        $(this).remove();
+    });
+    var newBookmarkList = [];
+    for(bookmarkid in bookmarkList) {
+        if(bookmarkList[bookmarkid]!=userid)
+            newBookmarkList.push(bookmarkList[bookmarkid]);
+    }
+    bookmarkList = newBookmarkList;
+    $.cookie("bookmarkList",JSON.stringify(bookmarkList));
+}
+function renderBookmark(userid) {
+    return "<li style='display: none;'><a href='javascript:void(0);' onclick=\"removeFromBookmark('"+userid+"',this)\">x</a> <a href='#profile/"+userid+"'>"+userid+"</a></li>";
+}
+function loadBookMarks() {
+    var fromCookie = $.cookie("bookmarkList");
+    if(fromCookie==null) bookmarkList = [];
+    else bookmarkList = JSON.parse(fromCookie);
+    _.each(bookmarkList,function(userid) {
+        $("#bookmarkList").prepend(renderBookmark(userid));
+    });
+    $("#bookmarkList :hidden").slideDown();
+}
 
 // Data
 
@@ -563,6 +615,7 @@ var profileUserId = null;
 var myProfile = null;
 var displayedProfile = null;
 var displayedSearch = null;
+var bookmarkList = [];
 function following(userid) {
     if(myProfile==null)
         return false;

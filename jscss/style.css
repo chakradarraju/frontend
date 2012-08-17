@@ -152,3 +152,10 @@ input[type=text], input[type=password] {
 #messageClose {
     float: right;
 }
+#bookmarkList {
+    list-style: none;
+    margin: 10px;
+}
+#bookmarkList li {
+    margin: 3px;
+}
