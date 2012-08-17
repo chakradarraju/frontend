@@ -1,7 +1,7 @@
 // Event Handlers
 $('#tweetBox').on("propertychange textarea textInput", function () {
     var str = $(this).val();
-    var len = str.length;
+    var len = str.length+1;
     if(len>140) {
         $(this).val(str.substr(0,140));
         len = 140;
@@ -198,7 +198,6 @@ function setup() {
     }
     $("#editProfileBackground").val(background);
     $("#tweetBox").focus();
-    loadBookMarks();
 }
 function closeSearchPopup() {
     $("#menu-search").removeClass("open");
@@ -569,6 +568,7 @@ function setMyProfile(profile) {
     myProfile = profile;
     updateMiniProfile(profile);
     showEditProfile();
+    loadBookMarks();
 }
 function retweet(postid) {
     $.post('/backend/retweet/',{"postid":postid},function(data) {
@@ -577,7 +577,7 @@ function retweet(postid) {
 }
 function addToBookmark(userid) {
     bookmarkList.push(userid);
-    $.cookie("bookmarkList",JSON.stringify(bookmarkList));
+    $.cookie("bookmarkList-"+myProfile['userid'],JSON.stringify(bookmarkList));
     $("#bookmarkList").prepend(renderBookmark(userid));
     $("#bookmarkList :hidden").slideDown();
 }
@@ -591,13 +591,13 @@ function removeFromBookmark(userid,item) {
             newBookmarkList.push(bookmarkList[bookmarkid]);
     }
     bookmarkList = newBookmarkList;
-    $.cookie("bookmarkList",JSON.stringify(bookmarkList));
+    $.cookie("bookmarkList-"+myProfile['userid'],JSON.stringify(bookmarkList));
 }
 function renderBookmark(userid) {
     return "<li style='display: none;'><a href='javascript:void(0);' onclick=\"removeFromBookmark('"+userid+"',this)\">x</a> <a href='#profile/"+userid+"'>"+userid+"</a></li>";
 }
 function loadBookMarks() {
-    var fromCookie = $.cookie("bookmarkList");
+    var fromCookie = $.cookie("bookmarkList-"+myProfile['userid']);
     if(fromCookie==null) bookmarkList = [];
     else bookmarkList = JSON.parse(fromCookie);
     _.each(bookmarkList,function(userid) {
